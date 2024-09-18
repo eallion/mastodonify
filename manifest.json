@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Mastodonify",
+  "default_locale": "en",
+  "version": "1.0",
+  "description": "__MSG_extDesc__",
+  "permissions": ["storage", "notifications", "activeTab", "tabs"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icons/mastodonify-16.png",
+      "32": "icons/mastodonify-32.png"
+    }
+  },
+  "icons": {
+    "128": "icons/mastodonify-128.png",
+    "48": "icons/mastodonify-48.png",
+    "64": "icons/mastodonify-64.png"
+  },
+  "options_page": "popup.html"
+}

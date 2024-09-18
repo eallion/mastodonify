@@ -1,0 +1,66 @@
+{
+  "extDesc": {
+    "message": "Display unread notifications count from Mastodon.",
+    "description": "Mastodonify description"
+  },
+  "setting_title": {
+    "message": "Mastodonify Setting",
+    "description": "Mastodonify Setting"
+  },
+  "setting_title_h1": {
+    "message": "Setting",
+    "description": "Mastodonify Setting"
+  },
+  "docs": {
+    "message": "Docs - [<a href='https://github.com/eallion/mastodonify?tab=readme-ov-file#mastodonify' target='_blank' rel='noopener noreferrer'>Tutorial</a>]",
+    "description": "Mastodonify Docs"
+  },
+  "description": {
+    "message": "Description: Support Mastodon version ≥ <a href='https://github.com/mastodon/mastodon/releases/tag/v4.3.0' target='_blank' rel='noopener noreferrer'>v4.3.0</a>",
+    "description": "Mastodonify Description"
+  },
+  "access_token_label": {
+    "message": "[Required] Token",
+    "description": "Application Access Token"
+  },
+  "user_name_label": {
+    "message": "[Required] User Name (<a href='https://e5n.cc/@eallion' target='_blank' rel='noopener noreferrer'>@eallion@e5n.cc</a>)",
+    "description": "User Name"
+  },
+  "instance_label": {
+    "message": "[Optional] Instance (e.g: e5n.cc)",
+    "description": "Mastodon Instance"
+  },
+  "limit_label": {
+    "message": "[Optional] Limit (1-1000, default: 100)",
+    "description": "Limit"
+  },
+  "types_label": {
+    "message": "[Optional] Types (comma separated)",
+    "description": "Types"
+  },
+  "exclude_types_label": {
+    "message": "[Optional] Exclude Types (comma separated)",
+    "description": "Exclude Types"
+  },
+  "interval_label": {
+    "message": "[Optional] Request Interval (seconds)",
+    "description": "Request Interval"
+  },
+  "expand_option": {
+    "message": "Expand option",
+    "description": "Expand option"
+  },
+  "close_option": {
+    "message": "Close option",
+    "description": "Close option"
+  },
+  "button_save": {
+    "message": "Save",
+    "description": "Save Button"
+  },
+  "settings_saved": {
+    "message": "Settings saved!",
+    "description": "Settings saved!"
+  }
+}

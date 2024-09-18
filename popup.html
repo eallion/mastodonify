@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title id="setting_title"></title>
+</head>
+<body>
+    <h1 id="setting_title_h1"></h1>
+    <div id="message" class="message" style="display: none;"><span id="settings_saved">settings_saved</span></div>
+    <form id="settings-form">
+        <label for="userName"><span id="user_name_label">user_name_label</span></label>
+        <input type="text" id="userName" required>
+
+        <label for="accessToken"><span id="access_token_label">access_token_label</span></label>
+        <input type="text" id="accessToken" required>
+
+        <div id="optional-fields" style="display: none;">
+            <label for="instance"><span id="instance_label">instance_label</span></label>
+            <input type="text" id="instance">
+
+            <label for="limit"><span id="limit_label">limit_label</span></label>
+            <input type="number" id="limit" min="1" max="1000" value="100">
+    
+            <label for="types"><span id="types_label">types_label</span></label>
+            <input type="text" id="types">
+
+            <label for="excludeTypes"><span id="exclude_types_label">exclude_types_label</span></label>
+            <input type="text" id="excludeTypes">
+
+            <label for="interval"><span id="interval_label">interval_label</span></label>
+            <input type="number" id="interval" min="1" value="300">
+
+            <div class="description">
+                <p><span id="docs">docs</span></p>
+                <p><span id="description">description</span></p>
+            </div>
+        </div>
+        <button type="button" id="toggle-optional"><span id="expand_option">expand_option</span></button>
+        <button type="submit"><span id="button_save">button_save</span></button>
+    </form>
+    <script src="popup.js"></script>
+</body>
+</html>

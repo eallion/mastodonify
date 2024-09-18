@@ -1,0 +1,66 @@
+{
+  "extDesc": {
+    "message": "Mastodon 未读通知数提示。",
+    "description": "Mastodonify description"
+  },
+  "setting_title": {
+    "message": "Mastodonify 设置",
+    "description": "Mastodonify 设置"
+  },
+  "setting_title_h1": {
+    "message": "设置",
+    "description": "Mastodonify 设置"
+  },
+  "docs": {
+    "message": "文档 - [<a href='https://github.com/eallion/mastodonify?tab=readme-ov-file#mastodonify' target='_blank' rel='noopener noreferrer'>设置教程</a>]",
+    "description": "Mastodonify 设置文档"
+  },
+  "description": {
+    "message": "说明：支持 Mastodon 版本 ≥ <a href='https://github.com/mastodon/mastodon/releases/tag/v4.3.0' target='_blank' rel='noopener noreferrer'>v4.3.0</a>",
+    "description": "Mastodonify 设置说明"
+  },
+  "access_token_label": {
+    "message": "[必填] 令牌 Token",
+    "description": "设置 Access Token 访问令牌"
+  },
+  "user_name_label": {
+    "message": "[必填] 用户名（如：<a href='https://e5n.cc/@eallion' target='_blank' rel='noopener noreferrer'>@eallion@e5n.cc</a>）",
+    "description": "设置用户名"
+  },
+  "instance_label": {
+    "message": "[选填] 实例（如：e5n.cc）",
+    "description": "设置 Mastodon 实例"
+  },
+  "limit_label": {
+    "message": "[选填] 每次请求通知数限制（1-1000, 默认：100）",
+    "description": "设置请求数量限制"
+  },
+  "types_label": {
+    "message": "[选填] 想看的通知类型（逗号分隔，默认全部）",
+    "description": "设置需要查看的通知类型"
+  },
+  "exclude_types_label": {
+    "message": "[选填] 排除的通知类型（逗号分隔）",
+    "description": "设置需要排除的通知类型（不想看的通知类型）"
+  },
+  "interval_label": {
+    "message": "[选填] 刷新时间间隔（秒）",
+    "description": "设置刷新的时间间隔"
+  },
+  "expand_option": {
+    "message": "展开选项",
+    "description": "展开选项"
+  },
+  "close_option": {
+    "message": "收起选项",
+    "description": "收起选项"
+  },
+  "button_save": {
+    "message": "保存",
+    "description": "保存按钮"
+  },
+  "settings_saved": {
+    "message": "设置已保存！",
+    "description": "设置已保存！"
+  }
+}

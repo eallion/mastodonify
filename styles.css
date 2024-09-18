@@ -1,0 +1,80 @@
+body {
+  font-family: Arial, sans-serif;
+  width: 375px;
+  background-color: #1e1e1e; /* 背景颜色 */
+  color: #c9d1d9; /* 字体颜色 */
+}
+
+h1 {
+  font-size: 20px;
+  color: #c9d1d9; /* 字体颜色 */
+}
+
+a,
+a:active,
+a:hover,
+a:focus,
+a:visited {
+  color: #58a6ff; /* 链接颜色 */
+}
+
+.description {
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-left: 4px solid #30363d; /* 左侧边框 */
+  padding: 10px 15px; /* 内边距 */
+  margin: 10px 0; /* 外边距 */
+  color: #c9d1d9; /* 字体颜色 */
+  background-color: #21262d; /* 背景颜色 */
+  font-style: italic; /* 斜体 */
+}
+
+.description p {
+  margin: 0; /* 去掉段落的默认外边距 */
+}
+
+form {
+  width: 100%;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #c9d1d9; /* 字体颜色 */
+}
+
+input {
+  width: 100%;
+  padding: 5px;
+  margin: 5px 0 10px;
+  opacity: 0.9; /* 透明度 */
+  background-color: #30363d; /* 输入框背景颜色 */
+  color: #c9d1d9; /* 输入框字体颜色 */
+  border: 1px solid #444c56; /* 输入框边框颜色 */
+}
+
+label:has(+ input[required]) {
+  font-weight: 600;
+}
+
+button {
+  margin: 10px 0;
+  padding: 5px 10px;
+  background-color: #58a6ff; /* 按钮背景颜色 */
+  color: #ffffff; /* 按钮字体颜色 */
+  border: none; /* 去掉边框 */
+  cursor: pointer; /* 鼠标指针 */
+}
+
+.message {
+  background-color: #2ea043; /* 成功消息背景颜色 */
+  color: white; /* 白色文字 */
+  padding: 10px; /* 内边距 */
+  margin: 10px 0; /* 外边距 */
+  border-radius: 5px; /* 圆角 */
+  transition: opacity 0.5s; /* 过渡效果 */
+  opacity: 0; /* 初始透明度 */
+}
