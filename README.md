@@ -6,57 +6,88 @@ Display unread notifications count from Mastodon extension for Chrome.
 
 [![](assets/ChromeStore.png)](https://chromewebstore.google.com/detail/moemfdcocgppacjkgbjmghhaeadaphdh)
 
-### Settings
+## Features
 
-#### 1. User Name
+- **Smart Popup UI**: Shows notification count when configured, settings when needed
+- **Notification Badge**: Displays unread count on extension icon
+- **Click Actions**: Click notification area to jump to notifications or profile
+- **Auto-parse Instance**: Extracts instance from username automatically
+- **Performance Optimized**: Built-in caching and intelligent refresh
+- **Multi-language Support**: English and Chinese interface
 
-The format for Mastodon usernames: `@eallion@e5n.cc`
+## Quick Setup
+
+### Required Settings
+
+#### 1. Mastodon Username
+
+Format: `@eallion@e5n.cc` (include both username and instance)
 
 #### 2. Access Token
 
-Go to the Mastodon instance, `Settings` > `Development` to create a `New Application`.
+1. Go to your Mastodon instance: `Settings` > `Development`
+2. Click `New application`
+3. Fill in `Application name` (any name)
+4. Check only `read:notifications` scope
+5. Create and copy `Your access token`
+6. Paste it into the extension settings
 
-> Quick link: https://{INSTANCE}/settings/applications/
+> Quick link: `https://{YOUR_INSTANCE}/settings/applications/`
 
-You can fill in the `Application Name` with anything, and only check the permission scopes `read:notification`.
+### Optional Settings
 
-After successful creation, copy `Your Access Token` and paste it into the browser extension's "`Token`" field. There is no need to copy the `Client key` or `Client secret`.
+Click the settings button next to notification count to access advanced options:
+
+#### 3. Notification Limit
+
+- Default: 100 notifications
+- Range: 1-1000
+- Keep default unless you receive high volume of notifications
+
+#### 4. Exclude Notification Types
+
+Check boxes to exclude specific notification types:
+
+- `mention` - Mentions in posts
+- `status` - New posts from followed users
+- `reblog` - Boosts of your posts
+- `follow` - New followers
+- `follow_request` - Follow requests
+- `favourite` - Favorites of your posts
+- `poll` - Poll completions
+- `update` - Edited post notifications
+- `admin.sign_up` - New user sign-ups
+- `admin.report` - New reports
+
+#### 5. Refresh Interval
+
+- Default: 300 seconds (5 minutes)
+- Minimum: 60 seconds
+- Longer intervals recommended to avoid rate limiting
+
+## Usage
+
+1. **First Time**: Extension opens settings automatically
+2. **Configured**: Shows notification count with badge
+3. **Click Notifications**:
+   - With unread: Opens notifications page
+   - Without unread: Opens your profile
+4. **Settings**: Click gear icon to modify configuration
+
+## Tips
+
+- The instance is automatically extracted from your username
+- Extension caches notifications for 30 seconds to reduce API calls
+- Error states show in red with retry logic
+- Badge shows "99+" for 100+ notifications
 
 <details><summary>
-Optional： 👈👈👈
-</summary>  
+Technical Details
+</summary>
 
-#### 3. Instance
-
-Instance domain, e.g., e5n.cc
-
-Note: If you enter the full Mastodon username, there is no need to fill in the `Instance` option, as it will be automatically resolved.
-
-#### 4. Limit
-
-How many notifications to view at a time, default is 100, maximum is 1000. If you haven't encountered SPAM, keeping the default usually meets the needs.
-
-#### 5. Types
-
-Fill in the types below, separated by commas.
-
-- `mention` = Someone mentioned you in their status
-- `status` = Someone you enabled notifications for has posted a status
-- `reblog` = Someone boosted one of your statuses
-- `follow` = Someone followed you
-- `follow_request` = Someone requested to follow you
-- `favourite` = Someone favourited one of your statuses
-- `poll` = A poll you have voted in or created has ended
-- `update` = A status you boosted with has been edited
-- `admin.sign_up` = Someone signed up (optionally sent to admins)
-- `admin.report` = A new report has been filed
-
-#### 6. Exclude Types
-
-Same as above.
-
-#### 7. Request Interval
-
-Default is 300 seconds (5 minutes). Do not set it too fast to avoid being banned.
+- Uses Mastodon API v2 `/api/v1/notifications/unread_count`
+- Implements exponential backoff for errors
+- Stores settings securely in Chrome sync storage
+- Manifest V3 compliant
 
 </details>

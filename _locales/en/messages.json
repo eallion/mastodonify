@@ -24,23 +24,15 @@
     "description": "Application Access Token"
   },
   "user_name_label": {
-    "message": "[Required] User Name (<a href='https://e5n.cc/@eallion' target='_blank' rel='noopener noreferrer'>@eallion@e5n.cc</a>)",
+    "message": "[Required] Mastodon User Name",
     "description": "User Name"
   },
-  "instance_label": {
-    "message": "[Optional] Instance (e.g: e5n.cc)",
-    "description": "Mastodon Instance"
-  },
-  "limit_label": {
-    "message": "[Optional] Limit (1-1000, default: 100)",
+    "limit_label": {
+    "message": "[Optional] Limit (1-1000)",
     "description": "Limit"
   },
-  "types_label": {
-    "message": "[Optional] Types (comma separated)",
-    "description": "Types"
-  },
-  "exclude_types_label": {
-    "message": "[Optional] Exclude Types (comma separated)",
+    "exclude_types_label": {
+    "message": "[Optional] Exclude Types",
     "description": "Exclude Types"
   },
   "interval_label": {
@@ -59,8 +51,68 @@
     "message": "Save",
     "description": "Save Button"
   },
+  "basic_info_title": {
+    "message": "Basic Information",
+    "description": "Basic Information Section Title"
+  },
+  "advanced_settings_title": {
+    "message": "Advanced Settings",
+    "description": "Advanced Settings Section Title"
+  },
+  "username_hint": {
+    "message": "e.g. @user@mastodon.social",
+    "description": "Username input hint"
+  },
+  "token_hint": {
+    "message": "Visit your instance's application settings page to create an access token",
+    "description": "Token input hint"
+  },
+  "settings_button": {
+    "message": "Settings",
+    "description": "Settings button text"
+  },
+  "unread_notifications_text": {
+    "message": "unread notifications",
+    "description": "Unread notifications text"
+  },
+  "no_new_notifications": {
+    "message": "No new notifications",
+    "description": "No new notifications text"
+  },
+  "configuration_error": {
+    "message": "Configuration error",
+    "description": "Configuration error text"
+  },
   "settings_saved": {
     "message": "Settings saved!",
     "description": "Settings saved!"
+  },
+  "open_mastodon_label": {
+    "message": "Open Mastodon",
+    "description": "Open Mastodon Button"
+  },
+  "test_notifications_label": {
+    "message": "Test Notifications",
+    "description": "Test Notifications Button"
+  },
+  "loading": {
+    "message": "Loading...",
+    "description": "Loading state text"
+  },
+  "network_error": {
+    "message": "Network error",
+    "description": "Network error message"
+  },
+  "rate_limit_exceeded": {
+    "message": "Rate limit exceeded, please try again later",
+    "description": "API rate limit message"
+  },
+  "invalid_token": {
+    "message": "Invalid access token, please check settings",
+    "description": "Invalid token message"
+  },
+  "invalid_instance": {
+    "message": "Invalid instance address, please check username format",
+    "description": "Invalid instance message"
   }
 }

@@ -24,23 +24,15 @@
     "description": "设置 Access Token 访问令牌"
   },
   "user_name_label": {
-    "message": "[必填] 用户名（如：<a href='https://e5n.cc/@eallion' target='_blank' rel='noopener noreferrer'>@eallion@e5n.cc</a>）",
+    "message": "[必填] Mastodon 账号",
     "description": "设置用户名"
   },
-  "instance_label": {
-    "message": "[选填] 实例（如：e5n.cc）",
-    "description": "设置 Mastodon 实例"
-  },
-  "limit_label": {
-    "message": "[选填] 每次请求通知数限制（1-1000, 默认：100）",
+    "limit_label": {
+    "message": "[选填] 每次请求通知数（1-1000）",
     "description": "设置请求数量限制"
   },
-  "types_label": {
-    "message": "[选填] 想看的通知类型（逗号分隔，默认全部）",
-    "description": "设置需要查看的通知类型"
-  },
-  "exclude_types_label": {
-    "message": "[选填] 排除的通知类型（逗号分隔）",
+    "exclude_types_label": {
+    "message": "[选填] 排除的通知类型",
     "description": "设置需要排除的通知类型（不想看的通知类型）"
   },
   "interval_label": {
@@ -59,8 +51,68 @@
     "message": "保存",
     "description": "保存按钮"
   },
+  "basic_info_title": {
+    "message": "基本信息",
+    "description": "基本信息区块标题"
+  },
+  "advanced_settings_title": {
+    "message": "高级设置",
+    "description": "高级设置区块标题"
+  },
+  "username_hint": {
+    "message": "e.g. @eallion@e5n.cc",
+    "description": "用户名输入框提示"
+  },
+  "token_hint": {
+    "message": "请访问您实例的应用设置页面创建访问令牌",
+    "description": "令牌输入框提示"
+  },
+  "settings_button": {
+    "message": "设置",
+    "description": "设置按钮文本"
+  },
+  "unread_notifications_text": {
+    "message": "条未读通知",
+    "description": "未读通知文本"
+  },
+  "no_new_notifications": {
+    "message": "没有新通知",
+    "description": "没有新通知文本"
+  },
+  "configuration_error": {
+    "message": "配置错误",
+    "description": "配置错误文本"
+  },
   "settings_saved": {
     "message": "设置已保存！",
     "description": "设置已保存！"
+  },
+  "open_mastodon_label": {
+    "message": "打开 Mastodon",
+    "description": "打开 Mastodon 按钮"
+  },
+  "test_notifications_label": {
+    "message": "测试通知",
+    "description": "测试通知按钮"
+  },
+  "loading": {
+    "message": "加载中...",
+    "description": "加载状态文本"
+  },
+  "network_error": {
+    "message": "网络错误",
+    "description": "网络错误提示"
+  },
+  "rate_limit_exceeded": {
+    "message": "请求过于频繁，请稍后再试",
+    "description": "API 限制提示"
+  },
+  "invalid_token": {
+    "message": "访问令牌无效，请检查设置",
+    "description": "无效令牌提示"
+  },
+  "invalid_instance": {
+    "message": "实例地址无效，请检查用户名格式",
+    "description": "无效实例提示"
   }
 }
