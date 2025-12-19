@@ -4,7 +4,9 @@ English | [[中文说明](README.cn.md)]
 
 Display unread notifications count from Mastodon extension for Chrome and Firefox.
 
-[![](assets/ChromeStore.png)](https://chromewebstore.google.com/detail/moemfdcocgppacjkgbjmghhaeadaphdh)
+## Screenshot
+
+![](screenshots/mastodonify_1280_800.png)
 
 ## Features
 
@@ -170,6 +172,18 @@ Issues and Pull Requests are welcome!
 [MIT License](LICENSE)
 
 ## Changelog
+
+### v1.0.5
+
+- ✨ Performance optimization
+
+### v1.0.4
+
+- ✨ Performance optimization
+
+### v1.0.3
+
+- ✨ Performance optimization
 
 ### v1.0.2
 

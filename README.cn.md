@@ -4,7 +4,9 @@
 
 Mastodon 未读通知数提示的 Chrome 和 Firefox 插件。
 
-[![](assets/ChromeStore.png)](https://chromewebstore.google.com/detail/moemfdcocgppacjkgbjmghhaeadaphdh)
+## 截图
+
+![](screenshots/mastodonify_1280_800.png)
 
 ## 功能特性
 
@@ -170,6 +172,18 @@ mastodonify/
 [MIT License](LICENSE)
 
 ## 更新日志
+
+### v1.0.5
+
+- ✨ 优化细节
+
+### v1.0.4
+
+- ✨ 优化细节
+
+### v1.0.3
+
+- ✨ 优化细节
 
 ### v1.0.2
 

@@ -84,7 +84,7 @@
     "description": "Unread notifications text"
   },
   "no_new_notifications": {
-    "message": "No new notifications",
+    "message": "Notifications",
     "description": "No new notifications text"
   },
   "configuration_error": {
