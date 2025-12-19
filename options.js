@@ -59,17 +59,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('DOMContentLoaded', function () {
     // 设置国际化文本
-    document.getElementById('setting_title').innerHTML = chrome.i18n.getMessage('setting_title');
-    document.getElementById('setting_title_h1').innerHTML = chrome.i18n.getMessage('setting_title_h1');
-    document.getElementById('description').innerHTML = chrome.i18n.getMessage('description');
-    document.getElementById('docs').innerHTML = chrome.i18n.getMessage('docs');
-    document.getElementById('access_token_label').innerHTML = chrome.i18n.getMessage('access_token_label');
-    document.getElementById('user_name_label').innerHTML = chrome.i18n.getMessage('user_name_label');
-    document.getElementById('limit_label').innerHTML = chrome.i18n.getMessage('limit_label');
-    document.getElementById('exclude_types_label').innerHTML = chrome.i18n.getMessage('exclude_types_label');
-    document.getElementById('interval_label').innerHTML = chrome.i18n.getMessage('interval_label');
-    document.getElementById('expand_option').innerHTML = chrome.i18n.getMessage('expand_option');
-    document.getElementById('button_save').innerHTML = chrome.i18n.getMessage('button_save');
+    document.getElementById('setting_title').textContent = chrome.i18n.getMessage('setting_title');
+    document.getElementById('setting_title_h1').textContent = chrome.i18n.getMessage('setting_title_h1');
+    document.getElementById('description').textContent = chrome.i18n.getMessage('description');
+    document.getElementById('docs').textContent = chrome.i18n.getMessage('docs');
+    document.getElementById('access_token_label').textContent = chrome.i18n.getMessage('access_token_label');
+    document.getElementById('user_name_label').textContent = chrome.i18n.getMessage('user_name_label');
+    document.getElementById('limit_label').textContent = chrome.i18n.getMessage('limit_label');
+    document.getElementById('exclude_types_label').textContent = chrome.i18n.getMessage('exclude_types_label');
+    document.getElementById('interval_label').textContent = chrome.i18n.getMessage('interval_label');
+    document.getElementById('expand_option').textContent = chrome.i18n.getMessage('expand_option');
+    document.getElementById('button_save').textContent = chrome.i18n.getMessage('button_save');
   
     // 处理选填字段的展开和收起
     const optionalFields = document.getElementById('optional-fields');
@@ -77,15 +77,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 右键选项页面始终展开所有设置项
     optionalFields.style.display = 'block';
-    toggleButton.innerHTML = chrome.i18n.getMessage('close_option');
+    toggleButton.textContent = chrome.i18n.getMessage('close_option');
 
     toggleButton.addEventListener('click', function () {
         if (optionalFields.style.display === 'none') {
             optionalFields.style.display = 'block';
-            toggleButton.innerHTML = chrome.i18n.getMessage('close_option'); // 更新按钮文本
+            toggleButton.textContent = chrome.i18n.getMessage('close_option'); // 更新按钮文本
         } else {
             optionalFields.style.display = 'none';
-            toggleButton.innerHTML = chrome.i18n.getMessage('expand_option'); // 更新按钮文本
+            toggleButton.textContent = chrome.i18n.getMessage('expand_option'); // 更新按钮文本
         }
     });
 });

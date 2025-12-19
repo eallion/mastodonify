@@ -59,6 +59,7 @@ async function fetchUnreadCount() {
 
         if (!accessToken || !userName) {
             chrome.action.setBadgeText({ text: '' }); // 清除徽章
+            lastNotificationCount = 0; // 重置为0
             isFetching = false;
             return; // 如果缺少必要的设置，直接返回
         }
@@ -96,6 +97,7 @@ async function fetchUnreadCount() {
 
         if (!instanceUrl) {
             chrome.action.setBadgeText({ text: '' }); // 清除徽章
+            lastNotificationCount = 0; // 重置为0
             isFetching = false;
             return;
         }
@@ -105,13 +107,16 @@ async function fetchUnreadCount() {
         const cached = notificationCache.get(cacheKey);
         const now = Date.now();
         if (cached && (now - cached.timestamp) < cacheTimeout) {
-            // 使用缓存数据
-            if (cached.count !== lastNotificationCount) {
-                lastNotificationCount = cached.count;
-                updateBadge(cached.count);
+            // 使用缓存数据，但如果用户可能已读通知，减少缓存时间
+            const effectiveCacheTimeout = cached.count > 0 ? cacheTimeout : 5000; // 如果没有通知，只缓存5秒
+            if ((now - cached.timestamp) < effectiveCacheTimeout) {
+                if (cached.count !== lastNotificationCount) {
+                    lastNotificationCount = cached.count;
+                    updateBadge(cached.count);
+                }
+                isFetching = false;
+                return;
             }
-            isFetching = false;
-            return;
         }
 
         // 先尝试直接使用 unread_count 端点（不带任何参数）
@@ -250,6 +255,7 @@ async function getAccountAndFetchNotifications(instanceUrl, userName, accessToke
         if (!accountResponse.ok) {
             console.error('Error fetching account ID:', accountResponse.statusText);
             chrome.action.setBadgeText({ text: '' });
+            lastNotificationCount = 0;
             return;
         }
 
@@ -291,6 +297,7 @@ async function getAccountAndFetchNotifications(instanceUrl, userName, accessToke
         }
     } catch (error) {
         chrome.action.setBadgeText({ text: '' });
+        lastNotificationCount = 0;
     }
 }
 
@@ -354,9 +361,11 @@ async function fetchNotificationCountAlternative(instanceUrl, accessToken, limit
             updateNotificationCount(unreadCount);
         } else {
             chrome.action.setBadgeText({ text: '' });
+            lastNotificationCount = 0;
         }
     } catch (error) {
         chrome.action.setBadgeText({ text: '' });
+        lastNotificationCount = 0;
     }
 }
 
@@ -374,7 +383,19 @@ function restartFetchTimer() {
     fetchUnreadCount();
 }
 
-startFetchTimer(); // 初始启动定时器
+// 初始化时先获取设置，然后启动定时器
+async function initializeExtension() {
+    // 读取设置以获取正确的轮询间隔
+    const { interval } = await chrome.storage.sync.get(['interval']);
+    if (interval) {
+        fetchInterval = interval * 1000; // 将秒转换为毫秒
+    }
+    startFetchTimer();
+    // 立即执行一次获取通知
+    fetchUnreadCount();
+}
+
+initializeExtension(); // 使用新的初始化函数
 
 // 监听浏览器启动事件
 chrome.runtime.onStartup.addListener(() => {

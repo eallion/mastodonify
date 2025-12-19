@@ -1,34 +1,34 @@
 document.addEventListener('DOMContentLoaded', function () {
     // 设置国际化文本（popup_options.html 不需要标题）
     if (document.getElementById('setting_title')) {
-        document.getElementById('setting_title').innerHTML = chrome.i18n.getMessage('setting_title');
+        document.getElementById('setting_title').textContent = chrome.i18n.getMessage('setting_title');
     }
     if (document.getElementById('description')) {
-        document.getElementById('description').innerHTML = chrome.i18n.getMessage('description');
-        document.getElementById('docs').innerHTML = chrome.i18n.getMessage('docs');
+        document.getElementById('description').textContent = chrome.i18n.getMessage('description');
+        document.getElementById('docs').textContent = chrome.i18n.getMessage('docs');
     }
-    document.getElementById('access_token_label').innerHTML = chrome.i18n.getMessage('access_token_label');
-    document.getElementById('user_name_label').innerHTML = chrome.i18n.getMessage('user_name_label');
-    document.getElementById('limit_label').innerHTML = chrome.i18n.getMessage('limit_label');
-    document.getElementById('exclude_types_label').innerHTML = chrome.i18n.getMessage('exclude_types_label');
-    document.getElementById('interval_label').innerHTML = chrome.i18n.getMessage('interval_label');
-        document.getElementById('button_save').innerHTML = chrome.i18n.getMessage('button_save');
+    document.getElementById('access_token_label').textContent = chrome.i18n.getMessage('access_token_label');
+    document.getElementById('user_name_label').textContent = chrome.i18n.getMessage('user_name_label');
+    document.getElementById('limit_label').textContent = chrome.i18n.getMessage('limit_label');
+    document.getElementById('exclude_types_label').textContent = chrome.i18n.getMessage('exclude_types_label');
+    document.getElementById('interval_label').textContent = chrome.i18n.getMessage('interval_label');
+        document.getElementById('button_save').textContent = chrome.i18n.getMessage('button_save');
 
   // 设置新增的国际化文本
   if (document.getElementById('basic_info_title')) {
-    document.getElementById('basic_info_title').innerHTML = chrome.i18n.getMessage('basic_info_title');
+    document.getElementById('basic_info_title').textContent = chrome.i18n.getMessage('basic_info_title');
   }
   if (document.getElementById('advanced_settings_title')) {
-    document.getElementById('advanced_settings_title').innerHTML = chrome.i18n.getMessage('advanced_settings_title');
+    document.getElementById('advanced_settings_title').textContent = chrome.i18n.getMessage('advanced_settings_title');
   }
   if (document.getElementById('username_hint')) {
-    document.getElementById('username_hint').innerHTML = chrome.i18n.getMessage('username_hint');
+    document.getElementById('username_hint').textContent = chrome.i18n.getMessage('username_hint');
   }
   if (document.getElementById('token_hint')) {
-    document.getElementById('token_hint').innerHTML = chrome.i18n.getMessage('token_hint');
+    document.getElementById('token_hint').textContent = chrome.i18n.getMessage('token_hint');
   }
   if (document.getElementById('settings_link')) {
-    document.getElementById('settings_link').innerHTML = chrome.i18n.getMessage('settings_button');
+    document.getElementById('settings_link').textContent = chrome.i18n.getMessage('settings_button');
   }
   
     // 加载当前设置和显示通知状态

@@ -1,0 +1,18 @@
+{
+  "name": "mastodonify",
+  "version": "1.0.2",
+  "description": "A Chrome/Firefox extension that shows Mastodon notification count as a badge",
+  "scripts": {
+    "build": "pnpm run build:chrome && pnpm run build:firefox",
+    "build:chrome": "node build/build.js chrome",
+    "build:firefox": "node build/build.js firefox",
+    "package": "pnpm run build && node build/package.js",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "web-ext": "^7.11.0",
+    "zip-a-folder": "^3.1.4",
+    "tslib": "^2.6.2"
+  },
+  "packageManager": "pnpm@8.15.0"
+}

@@ -2,7 +2,7 @@
 
 中文说明 | [[English](README.md)]
 
-Mastodon 未读通知数提示的 Chrome 插件。
+Mastodon 未读通知数提示的 Chrome 和 Firefox 插件。
 
 [![](assets/ChromeStore.png)](https://chromewebstore.google.com/detail/moemfdcocgppacjkgbjmghhaeadaphdh)
 
@@ -14,6 +14,27 @@ Mastodon 未读通知数提示的 Chrome 插件。
 - **自动解析实例**：从用户名中自动提取实例地址
 - **性能优化**：内置缓存和智能刷新机制
 - **多语言支持**：中英文界面
+- **跨浏览器支持**：同时支持 Chrome 和 Firefox
+
+## 安装
+
+### Chrome 版本
+
+1. 从 [Releases](https://github.com/eallion/mastodonify/releases) 页面下载最新版本的 `mastodonify-chrome-v1.0.2.zip`
+2. 解压文件
+3. 打开 Chrome 浏览器，访问 `chrome://extensions/`
+4. 开启"开发者模式"
+5. 点击"加载已解压的扩展程序"
+6. 选择解压后的文件夹
+
+### Firefox 版本
+
+1. 从 [Releases](https://github.com/eallion/mastodonify/releases) 页面下载最新版本的 `mastodonify-firefox-v1.0.2.zip`
+2. 解压文件
+3. 打开 Firefox 浏览器，访问 `about:debugging`
+4. 点击"此 Firefox"
+5. 点击"临时载入附加组件"
+6. 选择解压后的文件夹中的 manifest.json 文件
 
 ## 快速设置
 
@@ -87,7 +108,81 @@ Mastodon 未读通知数提示的 Chrome 插件。
 
 - 使用 Mastodon API v2 `/api/v1/notifications/unread_count`
 - 实现指数退避错误处理
-- 设置安全存储在 Chrome 同步存储中
+- 设置安全存储在浏览器同步存储中
 - 符合 Manifest V3 规范
 
 </details>
+
+## 开发
+
+### 环境要求
+
+- Node.js 16+
+- pnpm
+
+### 安装依赖
+
+```bash
+pnpm install
+```
+
+### 构建命令
+
+```bash
+# 构建所有平台
+pnpm run build
+
+# 仅构建 Chrome 版本
+pnpm run build:chrome
+
+# 仅构建 Firefox 版本
+pnpm run build:firefox
+
+# 打包为发布文件
+pnpm run package
+
+# 清理构建文件
+pnpm run clean
+```
+
+### 项目结构
+
+```
+mastodonify/
+├── src/                # 源代码
+├── build/              # 构建脚本
+├── dist/               # 构建输出
+│   ├── chrome/         # Chrome 版本
+│   └── firefox/        # Firefox 版本
+├── release/            # 打包文件
+├── _locales/           # 多语言文件
+├── icons/              # 图标文件
+├── manifest.json       # 扩展清单
+└── popup.html          # 弹窗页面
+```
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+## 许可证
+
+[MIT License](LICENSE)
+
+## 更新日志
+
+### v1.0.2
+
+- 🆕 添加 Firefox 支持
+- 🛠️ 优化构建系统
+- 📦 支持统一构建和打包
+
+### v1.0.1
+
+- 🔧 修复通知检测问题
+- 🎨 改进用户界面
+
+### v1.0.0
+
+- 🎉 首次发布
+- ✨ 支持通知检测和显示

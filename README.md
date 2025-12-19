@@ -2,7 +2,7 @@
 
 English | [[中文说明](README.cn.md)]
 
-Display unread notifications count from Mastodon extension for Chrome.
+Display unread notifications count from Mastodon extension for Chrome and Firefox.
 
 [![](assets/ChromeStore.png)](https://chromewebstore.google.com/detail/moemfdcocgppacjkgbjmghhaeadaphdh)
 
@@ -14,6 +14,27 @@ Display unread notifications count from Mastodon extension for Chrome.
 - **Auto-parse Instance**: Extracts instance from username automatically
 - **Performance Optimized**: Built-in caching and intelligent refresh
 - **Multi-language Support**: English and Chinese interface
+- **Cross-browser Support**: Supports both Chrome and Firefox
+
+## Installation
+
+### Chrome Version
+
+1. Download the latest version `mastodonify-chrome-v1.0.2.zip` from [Releases](https://github.com/eallion/mastodonify/releases)
+2. Unzip the file
+3. Open Chrome browser and go to `chrome://extensions/`
+4. Enable "Developer mode"
+5. Click "Load unpacked"
+6. Select the unzipped folder
+
+### Firefox Version
+
+1. Download the latest version `mastodonify-firefox-v1.0.2.zip` from [Releases](https://github.com/eallion/mastodonify/releases)
+2. Unzip the file
+3. Open Firefox browser and go to `about:debugging`
+4. Click "This Firefox"
+5. Click "Load Temporary Add-on"
+6. Select the manifest.json file from the unzipped folder
 
 ## Quick Setup
 
@@ -87,7 +108,81 @@ Technical Details
 
 - Uses Mastodon API v2 `/api/v1/notifications/unread_count`
 - Implements exponential backoff for errors
-- Stores settings securely in Chrome sync storage
+- Stores settings securely in browser sync storage
 - Manifest V3 compliant
 
 </details>
+
+## Development
+
+### Prerequisites
+
+- Node.js 16+
+- pnpm
+
+### Install Dependencies
+
+```bash
+pnpm install
+```
+
+### Build Commands
+
+```bash
+# Build all platforms
+pnpm run build
+
+# Build Chrome version only
+pnpm run build:chrome
+
+# Build Firefox version only
+pnpm run build:firefox
+
+# Package for distribution
+pnpm run package
+
+# Clean build files
+pnpm run clean
+```
+
+### Project Structure
+
+```text
+mastodonify/
+├── src/                # Source code
+├── build/              # Build scripts
+├── dist/               # Build output
+│   ├── chrome/         # Chrome version
+│   └── firefox/        # Firefox version
+├── release/            # Package files
+├── _locales/           # Localization files
+├── icons/              # Icon files
+├── manifest.json       # Extension manifest
+└── popup.html          # Popup page
+```
+
+## Contributing
+
+Issues and Pull Requests are welcome!
+
+## License
+
+[MIT License](LICENSE)
+
+## Changelog
+
+### v1.0.2
+
+- 🆕 Added Firefox support
+- 🛠️ Optimized build system
+- 📦 Unified build and packaging
+
+### v1.0.1
+
+- 🔧 Fixed notification detection issues
+- 🎨 Improved UI
+
+### v1.0.0
+
+- 🎉 Initial release
+- ✨ Notification detection and display
