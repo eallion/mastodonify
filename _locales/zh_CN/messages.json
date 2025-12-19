@@ -64,8 +64,16 @@
     "description": "用户名输入框提示"
   },
   "token_hint": {
-    "message": "请访问您实例的应用设置页面创建访问令牌",
-    "description": "令牌输入框提示"
+    "message": "请访问您实例的",
+    "description": "令牌输入框提示第1部分"
+  },
+  "app_settings_page": {
+    "message": "应用设置页面",
+    "description": "应用设置页面文本"
+  },
+  "token_hint_suffix": {
+    "message": "创建访问令牌",
+    "description": "令牌输入框提示第2部分"
   },
   "settings_button": {
     "message": "设置",

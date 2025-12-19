@@ -7,7 +7,7 @@
     <title id="setting_title"></title>
 </head>
 <body>
-    <div id="message" class="message" style="display: none;"><span id="settings_saved">settings_saved</span></div>
+    <div id="message" class="message" style="display: none;"><span id="settings_saved"></span></div>
 
     <!-- 通知和设置按钮容器 -->
     <div id="notification-settings-container" class="notification-settings-container">
@@ -15,42 +15,44 @@
         <div id="notification-status" class="notification-status">
             <span class="status-icon">🔔</span>
             <span class="notification-count" id="notification-count">0</span>
-            <span class="notification-text" id="notification-text">没有新通知</span>
+            <span class="notification-text" id="notification-text"></span>
         </div>
 
         <!-- 设置链接（当必填项已配置时显示） -->
         <div id="settings-button" class="settings-button">
-            <span class="settings-link" id="settings-link" i18n-text="settings_button">设置</span>
+            <span class="settings-link" id="settings-link"></span>
         </div>
     </div>
 
     <form id="settings-form" class="settings-form">
         <div class="form-section">
-            <h3 class="section-title" id="basic_info_title">basic_info_title</h3>
+            <h3 class="section-title" id="basic_info_title"></h3>
 
             <div class="form-group">
-                <label for="userName"><span id="user_name_label">user_name_label</span></label>
+                <label for="userName"><span id="user_name_label"></span></label>
                 <input type="text" id="userName" class="form-input" required>
-                <div class="input-hint" id="username_hint">username_hint</div>
+                <div class="input-hint" id="username_hint"></div>
             </div>
 
             <div class="form-group">
-                <label for="accessToken"><span id="access_token_label">access_token_label</span></label>
+                <label for="accessToken"><span id="access_token_label"></span></label>
                 <input type="text" id="accessToken" class="form-input" required>
-                <div class="input-hint" id="token_hint">token_hint</div>
+                <div class="input-hint" id="token_hint_container">
+                    <span id="token_hint_prefix"></span><span id="app_settings_link"></span><span id="token_hint_suffix"></span>
+                </div>
             </div>
         </div>
 
         <div class="form-section">
-            <h3 class="section-title" id="advanced_settings_title">advanced_settings_title</h3>
+            <h3 class="section-title" id="advanced_settings_title"></h3>
 
             <div class="form-group">
-                <label for="limit"><span id="limit_label">limit_label</span></label>
+                <label for="limit"><span id="limit_label"></span></label>
                 <input type="number" id="limit" class="form-input" min="1" max="1000" value="100">
             </div>
 
             <div class="form-group">
-                <label><span id="exclude_types_label">exclude_types_label</span></label>
+                <label><span id="exclude_types_label"></span></label>
                 <div class="exclude-types-container">
                     <label class="checkbox-label">
                         <input type="checkbox" name="excludeType" value="mention">
@@ -96,20 +98,20 @@
             </div>
 
             <div class="form-group">
-                <label for="interval"><span id="interval_label">interval_label</span></label>
+                <label for="interval"><span id="interval_label"></span></label>
                 <input type="number" id="interval" class="form-input" min="60" value="300">
             </div>
         </div>
 
         <div class="form-section description-section">
             <div class="description">
-                <p><span id="docs">docs</span></p>
-                <p><span id="description">description</span></p>
+                <p><span id="docs"></span></p>
+                <p><span id="description"></span></p>
             </div>
         </div>
 
         <div class="form-actions">
-            <button type="submit" class="submit-button"><span id="button_save">button_save</span></button>
+            <button type="submit" class="submit-button"><span id="button_save"></span></button>
         </div>
     </form>
     <script src="popup.js"></script>

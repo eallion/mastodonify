@@ -64,15 +64,23 @@
     "description": "Username input hint"
   },
   "token_hint": {
-    "message": "Visit your instance's application settings page to create an access token",
-    "description": "Token input hint"
+    "message": "Visit your instance's ",
+    "description": "Token input hint part 1"
+  },
+  "app_settings_page": {
+    "message": "application settings page",
+    "description": "Application settings page text"
+  },
+  "token_hint_suffix": {
+    "message": " to create an access token",
+    "description": "Token input hint part 2"
   },
   "settings_button": {
-    "message": "Settings",
+    "message": "Setting",
     "description": "Settings button text"
   },
   "unread_notifications_text": {
-    "message": "unread notifications",
+    "message": "Notifications",
     "description": "Unread notifications text"
   },
   "no_new_notifications": {

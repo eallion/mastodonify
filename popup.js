@@ -1,3 +1,32 @@
+// 更新应用设置页面链接
+function updateAppSettingsLink(userName) {
+  const appSettingsLinkElement = document.getElementById('app_settings_link');
+  if (!appSettingsLinkElement) return;
+
+  // 清空现有内容
+  appSettingsLinkElement.innerHTML = '';
+
+  if (userName && userName.startsWith('@') && userName.includes('@', 1)) {
+    // 解析实例域名
+    const parts = userName.split('@');
+    const instance = parts[2];
+
+    if (instance) {
+      // 创建可点击的链接
+      const link = document.createElement('a');
+      link.href = `https://${instance}/settings/applications`;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.textContent = chrome.i18n.getMessage('app_settings_page');
+      appSettingsLinkElement.appendChild(link);
+      return;
+    }
+  }
+
+  // 如果没有有效的用户名，显示普通文本
+  appSettingsLinkElement.textContent = chrome.i18n.getMessage('app_settings_page');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     // 设置国际化文本（popup_options.html 不需要标题）
     if (document.getElementById('setting_title')) {
@@ -24,11 +53,25 @@ document.addEventListener('DOMContentLoaded', function () {
   if (document.getElementById('username_hint')) {
     document.getElementById('username_hint').textContent = chrome.i18n.getMessage('username_hint');
   }
-  if (document.getElementById('token_hint')) {
-    document.getElementById('token_hint').textContent = chrome.i18n.getMessage('token_hint');
+  // 设置 token hint 的三个部分
+  if (document.getElementById('token_hint_prefix')) {
+    document.getElementById('token_hint_prefix').textContent = chrome.i18n.getMessage('token_hint');
+  }
+  if (document.getElementById('token_hint_suffix')) {
+    document.getElementById('token_hint_suffix').textContent = chrome.i18n.getMessage('token_hint_suffix');
   }
   if (document.getElementById('settings_link')) {
     document.getElementById('settings_link').textContent = chrome.i18n.getMessage('settings_button');
+  }
+
+  // 初始化通知文本元素的国际化
+  if (document.getElementById('notification-text')) {
+    document.getElementById('notification-text').textContent = chrome.i18n.getMessage('no_new_notifications');
+  }
+
+  // 初始化保存成功消息的国际化
+  if (document.getElementById('settings_saved')) {
+    document.getElementById('settings_saved').textContent = chrome.i18n.getMessage('settings_saved');
   }
   
     // 加载当前设置和显示通知状态
@@ -45,6 +88,17 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         document.getElementById('interval').value = data.interval || '300';
+
+        // 更新应用设置页面链接
+        updateAppSettingsLink(data.userName);
+
+        // 为用户名输入框添加事件监听器，实时更新链接
+        const userNameInput = document.getElementById('userName');
+        if (userNameInput) {
+            userNameInput.addEventListener('input', (e) => {
+                updateAppSettingsLink(e.target.value);
+            });
+        }
 
   
         // 判断是否为首次安装或必填项缺失
@@ -68,6 +122,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // 如果必填项已配置，点击设置链接显示设置
         if (hasRequiredSettings) {
             const settingsLink = document.getElementById('settings-link');
+            // 确保 i18n 文本已经设置
+            settingsLink.textContent = chrome.i18n.getMessage('settings_button');
             settingsLink.addEventListener('click', (e) => {
                 e.stopPropagation(); // 防止触发通知状态的点击事件
                 const form = document.getElementById('settings-form');

@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Mastodonify",
   "default_locale": "en",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "__MSG_extDesc__",
   "permissions": ["storage", "notifications", "activeTab", "tabs"],
   "host_permissions": ["https://*/*"],
