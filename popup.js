@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('setting_title').textContent = chrome.i18n.getMessage('setting_title');
     }
     if (document.getElementById('description')) {
-        document.getElementById('description').textContent = chrome.i18n.getMessage('description');
-        document.getElementById('docs').textContent = chrome.i18n.getMessage('docs');
+        document.getElementById('description').innerHTML = chrome.i18n.getMessage('description');
+        document.getElementById('docs').innerHTML = chrome.i18n.getMessage('docs');
     }
     document.getElementById('access_token_label').textContent = chrome.i18n.getMessage('access_token_label');
     document.getElementById('user_name_label').textContent = chrome.i18n.getMessage('user_name_label');
