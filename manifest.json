@@ -2,9 +2,9 @@
   "manifest_version": 3,
   "name": "Mastodonify",
   "default_locale": "en",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "__MSG_extDesc__",
-  "permissions": ["storage", "notifications", "activeTab", "tabs"],
+  "permissions": ["storage", "notifications"],
   "host_permissions": ["https://*/*"],
   "background": {
     "service_worker": "background.js"
@@ -16,9 +16,15 @@
       "32": "icons/mastodonify-32.png"
     }
   },
-    "icons": {
+  "icons": {
     "128": "icons/mastodonify-128.png",
     "48": "icons/mastodonify-48.png",
     "64": "icons/mastodonify-64.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{12345678-1234-1234-1234-123456789012}",
+      "strict_min_version": "109.0"
+    }
   }
 }

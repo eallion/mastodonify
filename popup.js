@@ -1,4 +1,51 @@
-// 更新应用设置页面链接
+// ============= Firefox/Chrome 兼容性处理 =============
+const API = (() => {
+    const isFirefox = typeof browser !== 'undefined';
+    const browserAPI = isFirefox ? browser : chrome;
+    
+    return {
+        isFirefox,
+        storage: {
+            sync: {
+                get: (keys) => {
+                    if (isFirefox) {
+                        return browserAPI.storage.sync.get(keys);
+                    } else {
+                        return new Promise((resolve) => {
+                            browserAPI.storage.sync.get(keys, resolve);
+                        });
+                    }
+                },
+                set: (items) => {
+                    if (isFirefox) {
+                        return browserAPI.storage.sync.set(items);
+                    } else {
+                        return new Promise((resolve) => {
+                            browserAPI.storage.sync.set(items, resolve);
+                        });
+                    }
+                }
+            }
+        },
+        runtime: {
+            sendMessage: (message) => {
+                return browserAPI.runtime.sendMessage(message);
+            }
+        },
+        i18n: {
+            getMessage: (messageName, substitutions) => {
+                return browserAPI.i18n.getMessage(messageName, substitutions);
+            }
+        },
+        tabs: {
+            create: (details) => {
+                return browserAPI.tabs.create(details);
+            }
+        }
+    };
+})();
+
+// ============= 更新应用设置页面链接 =============
 function updateAppSettingsLink(userName) {
   const appSettingsLinkElement = document.getElementById('app_settings_link');
   if (!appSettingsLinkElement) return;
@@ -17,65 +64,66 @@ function updateAppSettingsLink(userName) {
       link.href = `https://${instance}/settings/applications`;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
-      link.textContent = chrome.i18n.getMessage('app_settings_page');
+      link.textContent = API.i18n.getMessage('app_settings_page');
       appSettingsLinkElement.appendChild(link);
       return;
     }
   }
 
   // 如果没有有效的用户名，显示普通文本
-  appSettingsLinkElement.textContent = chrome.i18n.getMessage('app_settings_page');
+  appSettingsLinkElement.textContent = API.i18n.getMessage('app_settings_page');
 }
 
 document.addEventListener('DOMContentLoaded', function () {
     // 设置国际化文本（popup_options.html 不需要标题）
     if (document.getElementById('setting_title')) {
-        document.getElementById('setting_title').textContent = chrome.i18n.getMessage('setting_title');
+        document.getElementById('setting_title').textContent = API.i18n.getMessage('setting_title');
     }
     if (document.getElementById('description')) {
-        document.getElementById('description').innerHTML = chrome.i18n.getMessage('description');
-        document.getElementById('docs').innerHTML = chrome.i18n.getMessage('docs');
+        document.getElementById('description').innerHTML = API.i18n.getMessage('description');
+        document.getElementById('docs').innerHTML = API.i18n.getMessage('docs');
     }
-    document.getElementById('access_token_label').textContent = chrome.i18n.getMessage('access_token_label');
-    document.getElementById('user_name_label').textContent = chrome.i18n.getMessage('user_name_label');
-    document.getElementById('limit_label').textContent = chrome.i18n.getMessage('limit_label');
-    document.getElementById('exclude_types_label').textContent = chrome.i18n.getMessage('exclude_types_label');
-    document.getElementById('interval_label').textContent = chrome.i18n.getMessage('interval_label');
-        document.getElementById('button_save').textContent = chrome.i18n.getMessage('button_save');
+    document.getElementById('access_token_label').textContent = API.i18n.getMessage('access_token_label');
+    document.getElementById('user_name_label').textContent = API.i18n.getMessage('user_name_label');
+    document.getElementById('limit_label').textContent = API.i18n.getMessage('limit_label');
+    document.getElementById('exclude_types_label').textContent = API.i18n.getMessage('exclude_types_label');
+    document.getElementById('interval_label').textContent = API.i18n.getMessage('interval_label');
+        document.getElementById('button_save').textContent = API.i18n.getMessage('button_save');
 
   // 设置新增的国际化文本
   if (document.getElementById('basic_info_title')) {
-    document.getElementById('basic_info_title').textContent = chrome.i18n.getMessage('basic_info_title');
+    document.getElementById('basic_info_title').textContent = API.i18n.getMessage('basic_info_title');
   }
   if (document.getElementById('advanced_settings_title')) {
-    document.getElementById('advanced_settings_title').textContent = chrome.i18n.getMessage('advanced_settings_title');
+    document.getElementById('advanced_settings_title').textContent = API.i18n.getMessage('advanced_settings_title');
   }
   if (document.getElementById('username_hint')) {
-    document.getElementById('username_hint').textContent = chrome.i18n.getMessage('username_hint');
+    document.getElementById('username_hint').textContent = API.i18n.getMessage('username_hint');
   }
   // 设置 token hint 的三个部分
   if (document.getElementById('token_hint_prefix')) {
-    document.getElementById('token_hint_prefix').textContent = chrome.i18n.getMessage('token_hint');
+    document.getElementById('token_hint_prefix').textContent = API.i18n.getMessage('token_hint');
   }
   if (document.getElementById('token_hint_suffix')) {
-    document.getElementById('token_hint_suffix').textContent = chrome.i18n.getMessage('token_hint_suffix');
+    document.getElementById('token_hint_suffix').textContent = API.i18n.getMessage('token_hint_suffix');
   }
   if (document.getElementById('settings_link')) {
-    document.getElementById('settings_link').textContent = chrome.i18n.getMessage('settings_button');
+    document.getElementById('settings_link').textContent = API.i18n.getMessage('settings_button');
   }
 
   // 初始化通知文本元素的国际化
   if (document.getElementById('notification-text')) {
-    document.getElementById('notification-text').textContent = chrome.i18n.getMessage('no_new_notifications');
+    document.getElementById('notification-text').textContent = API.i18n.getMessage('no_new_notifications');
   }
 
   // 初始化保存成功消息的国际化
   if (document.getElementById('settings_saved')) {
-    document.getElementById('settings_saved').textContent = chrome.i18n.getMessage('settings_saved');
+    document.getElementById('settings_saved').textContent = API.i18n.getMessage('settings_saved');
   }
   
     // 加载当前设置和显示通知状态
-    chrome.storage.sync.get(['instance', 'accessToken', 'userName', 'limit', 'types', 'excludeTypes', 'interval', 'accountUrl'], (data) => {
+    (async () => {
+        const data = await API.storage.sync.get(['instance', 'accessToken', 'userName', 'limit', 'types', 'excludeTypes', 'interval', 'accountUrl']);
         document.getElementById('accessToken').value = data.accessToken || '';
         document.getElementById('userName').value = data.userName || '';
         document.getElementById('limit').value = data.limit || '100';
@@ -101,9 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
   
-        // 判断是否为首次安装或必填项缺失
-        const hasRequiredSettings = data.accessToken && data.userName;
-
         if (!hasRequiredSettings) {
             // 首次安装或必填项缺失，显示设置表单
             document.getElementById('notification-settings-container').style.display = 'none';
@@ -123,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (hasRequiredSettings) {
             const settingsLink = document.getElementById('settings-link');
             // 确保 i18n 文本已经设置
-            settingsLink.textContent = chrome.i18n.getMessage('settings_button');
+            settingsLink.textContent = API.i18n.getMessage('settings_button');
             settingsLink.addEventListener('click', (e) => {
                 e.stopPropagation(); // 防止触发通知状态的点击事件
                 const form = document.getElementById('settings-form');
@@ -137,10 +182,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // 检查是否有错误
-        chrome.storage.local.get(['lastError'], (result) => {
+        (async () => {
+            const result = await API.storage.local.get(['lastError']);
             if (result.lastError && Date.now() - result.lastError.timestamp < 300000) { // 5分钟内的错误
                 const errorElement = document.getElementById('message');
-                errorElement.textContent = `${chrome.i18n.getMessage('network_error') || '网络错误'} (${result.lastError.count})`;
+                errorElement.textContent = `${API.i18n.getMessage('network_error') || '网络错误'} (${result.lastError.count})`;
                 errorElement.style.display = 'block';
                 errorElement.style.opacity = '1';
                 errorElement.style.backgroundColor = '#e53e3e';
@@ -153,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }, 500);
                 }, 3000);
             }
-        });
+        })();
     });
 
     // 处理表单提交
@@ -181,12 +227,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const interval = document.getElementById('interval').value || 300; // 获取interval的值，默认为300秒（5分钟）
 
         // 保存设置（不再需要单独保存 instance，因为可以从 userName 解析）
-        chrome.storage.sync.set({ instance, accessToken, userName, limit, types, excludeTypes, interval }, () => {
+        (async () => {
+            await API.storage.sync.set({ instance, accessToken, userName, limit, types, excludeTypes, interval });
             submitButton.classList.remove('loading');
             submitButton.disabled = false;
 
             const messageElement = document.getElementById('message');
-            messageElement.textContent = chrome.i18n.getMessage('settings_saved');
+            messageElement.textContent = API.i18n.getMessage('settings_saved');
             messageElement.style.display = 'block';
             messageElement.style.opacity = '1'; // 显示消息
 
@@ -208,8 +255,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }, 500); // 等待过渡效果完成
             }, 2000); // 2 秒后隐藏
-        });
-
+        })();
     });
 
   });
@@ -220,10 +266,11 @@ function updateNotificationStatus() {
     const notificationCount = document.getElementById('notification-count');
     const notificationText = document.getElementById('notification-text');
     notificationCount.textContent = '...';
-    notificationText.textContent = chrome.i18n.getMessage('loading') || '加载中...';
+    notificationText.textContent = API.i18n.getMessage('loading') || '加载中...';
 
     // 向 background.js 请求当前通知数量和实例URL
-    chrome.runtime.sendMessage({ action: "getNotificationCount" }, (response) => {
+    (async () => {
+        const response = await API.runtime.sendMessage({ action: "getNotificationCount" });
         const notificationStatus = document.getElementById('notification-status');
         const notificationCount = document.getElementById('notification-count');
         const notificationText = document.getElementById('notification-text');
@@ -236,7 +283,7 @@ function updateNotificationStatus() {
             if (response.count > 0) {
                 // 有未读通知
                 notificationCount.textContent = response.count > 99 ? '99+' : response.count;
-                notificationText.textContent = chrome.i18n.getMessage('unread_notifications_text');
+                notificationText.textContent = API.i18n.getMessage('unread_notifications_text');
                 notificationStatus.classList.add('has-notifications');
 
                 // 清除所有现有的事件监听器
@@ -251,13 +298,13 @@ function updateNotificationStatus() {
                     e.stopPropagation();
                     if (response.instanceUrl) {
                         const notificationsUrl = `https://${response.instanceUrl}/notifications`;
-                        chrome.tabs.create({ url: notificationsUrl });
+                        API.tabs.create({ url: notificationsUrl });
                     }
                 });
             } else {
                 // 没有新通知
                 notificationCount.textContent = '0';
-                notificationText.textContent = chrome.i18n.getMessage('no_new_notifications');
+                notificationText.textContent = API.i18n.getMessage('no_new_notifications');
                 notificationStatus.style.backgroundColor = '#4a5568'; // 灰色背景
 
                 // 清除所有现有的事件监听器
@@ -272,25 +319,25 @@ function updateNotificationStatus() {
                     e.stopPropagation();
                     if (response.instanceUrl && response.userName) {
                         const profileUrl = `https://${response.instanceUrl}/@${response.userName}`;
-                        chrome.tabs.create({ url: profileUrl });
+                        API.tabs.create({ url: profileUrl });
                     }
                 });
             }
         } else {
             // 配置错误
             notificationCount.textContent = '!';
-            notificationText.textContent = chrome.i18n.getMessage('configuration_error');
+            notificationText.textContent = API.i18n.getMessage('configuration_error');
             notificationStatus.style.backgroundColor = '#e53e3e'; // 红色背景
             notificationStatus.onclick = null; // 移除点击事件
         }
-    });
+    })();
 }
 
 
 // 定义在设置更新时调用的函数
 function onSettingsUpdated() {
     // 发送消息到 background.js
-    chrome.runtime.sendMessage({ action: "settingsUpdated" });
+    API.runtime.sendMessage({ action: "settingsUpdated" });
 
     // 更新通知状态
     setTimeout(updateNotificationStatus, 1000);

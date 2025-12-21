@@ -1,6 +1,50 @@
+// ============= Firefox/Chrome 兼容性处理 =============
+const API = (() => {
+    const isFirefox = typeof browser !== 'undefined';
+    const browserAPI = isFirefox ? browser : chrome;
+    
+    return {
+        isFirefox,
+        storage: {
+            sync: {
+                get: (keys) => {
+                    if (isFirefox) {
+                        return browserAPI.storage.sync.get(keys);
+                    } else {
+                        return new Promise((resolve) => {
+                            browserAPI.storage.sync.get(keys, resolve);
+                        });
+                    }
+                },
+                set: (items) => {
+                    if (isFirefox) {
+                        return browserAPI.storage.sync.set(items);
+                    } else {
+                        return new Promise((resolve) => {
+                            browserAPI.storage.sync.set(items, resolve);
+                        });
+                    }
+                }
+            }
+        },
+        runtime: {
+            sendMessage: (message) => {
+                return browserAPI.runtime.sendMessage(message);
+            }
+        },
+        i18n: {
+            getMessage: (messageName, substitutions) => {
+                return browserAPI.i18n.getMessage(messageName, substitutions);
+            }
+        }
+    };
+})();
+
+// ============= 设置页面初始化 =============
 document.addEventListener('DOMContentLoaded', () => {
     // 加载当前设置
-    chrome.storage.sync.get(['instance', 'accessToken', 'userName', 'limit', 'types', 'excludeTypes', 'interval'], (data) => {
+    (async () => {
+        const data = await API.storage.sync.get(['instance', 'accessToken', 'userName', 'limit', 'types', 'excludeTypes', 'interval']);
         document.getElementById('accessToken').value = data.accessToken || '';
         document.getElementById('userName').value = data.userName || '';
         document.getElementById('limit').value = data.limit || '100';
@@ -36,9 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const interval = document.getElementById('interval').value || 300; // 获取interval的值，默认为300秒（5分钟）
 
         // 保存设置（不再需要单独保存 instance，因为可以从 userName 解析）
-        chrome.storage.sync.set({ instance, accessToken, userName, limit, types, excludeTypes, interval }, () => {
+        (async () => {
+            await API.storage.sync.set({ instance, accessToken, userName, limit, types, excludeTypes, interval });
             const messageElement = document.getElementById('message');
-            messageElement.textContent = chrome.i18n.getMessage('settings_saved');
+            messageElement.textContent = API.i18n.getMessage('settings_saved');
             messageElement.style.display = 'block';
             messageElement.style.opacity = '1'; // 显示消息
 
@@ -52,24 +97,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     messageElement.style.display = 'none'; // 完全隐藏
                 }, 500); // 等待过渡效果完成
             }, 2000); // 2 秒后隐藏
-        });
+        })();
 
     });
+    })();
 });
 
 document.addEventListener('DOMContentLoaded', function () {
     // 设置国际化文本
-    document.getElementById('setting_title').textContent = chrome.i18n.getMessage('setting_title');
-    document.getElementById('setting_title_h1').textContent = chrome.i18n.getMessage('setting_title_h1');
-    document.getElementById('description').textContent = chrome.i18n.getMessage('description');
-    document.getElementById('docs').textContent = chrome.i18n.getMessage('docs');
-    document.getElementById('access_token_label').textContent = chrome.i18n.getMessage('access_token_label');
-    document.getElementById('user_name_label').textContent = chrome.i18n.getMessage('user_name_label');
-    document.getElementById('limit_label').textContent = chrome.i18n.getMessage('limit_label');
-    document.getElementById('exclude_types_label').textContent = chrome.i18n.getMessage('exclude_types_label');
-    document.getElementById('interval_label').textContent = chrome.i18n.getMessage('interval_label');
-    document.getElementById('expand_option').textContent = chrome.i18n.getMessage('expand_option');
-    document.getElementById('button_save').textContent = chrome.i18n.getMessage('button_save');
+    document.getElementById('setting_title').textContent = API.i18n.getMessage('setting_title');
+    document.getElementById('setting_title_h1').textContent = API.i18n.getMessage('setting_title_h1');
+    document.getElementById('description').textContent = API.i18n.getMessage('description');
+    document.getElementById('docs').textContent = API.i18n.getMessage('docs');
+    document.getElementById('access_token_label').textContent = API.i18n.getMessage('access_token_label');
+    document.getElementById('user_name_label').textContent = API.i18n.getMessage('user_name_label');
+    document.getElementById('limit_label').textContent = API.i18n.getMessage('limit_label');
+    document.getElementById('exclude_types_label').textContent = API.i18n.getMessage('exclude_types_label');
+    document.getElementById('interval_label').textContent = API.i18n.getMessage('interval_label');
+    document.getElementById('expand_option').textContent = API.i18n.getMessage('expand_option');
+    document.getElementById('button_save').textContent = API.i18n.getMessage('button_save');
   
     // 处理选填字段的展开和收起
     const optionalFields = document.getElementById('optional-fields');
@@ -77,15 +123,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 右键选项页面始终展开所有设置项
     optionalFields.style.display = 'block';
-    toggleButton.textContent = chrome.i18n.getMessage('close_option');
+    toggleButton.textContent = API.i18n.getMessage('close_option');
 
     toggleButton.addEventListener('click', function () {
         if (optionalFields.style.display === 'none') {
             optionalFields.style.display = 'block';
-            toggleButton.textContent = chrome.i18n.getMessage('close_option'); // 更新按钮文本
+            toggleButton.textContent = API.i18n.getMessage('close_option'); // 更新按钮文本
         } else {
             optionalFields.style.display = 'none';
-            toggleButton.textContent = chrome.i18n.getMessage('expand_option'); // 更新按钮文本
+            toggleButton.textContent = API.i18n.getMessage('expand_option'); // 更新按钮文本
         }
     });
 });
@@ -94,5 +140,5 @@ document.addEventListener('DOMContentLoaded', function () {
 // 定义在设置更新时调用的函数
 function onSettingsUpdated() {
     // 发送消息到 background.js
-    chrome.runtime.sendMessage({ action: "settingsUpdated" });
+    API.runtime.sendMessage({ action: "settingsUpdated" });
 }

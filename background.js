@@ -1,3 +1,97 @@
+// ============= Firefox/Chrome 兼容性处理 =============
+// 为Firefox和Chrome提供统一的API接口
+const API = (() => {
+    const isFirefox = typeof browser !== 'undefined';
+    const browserAPI = isFirefox ? browser : chrome;
+    
+    return {
+        // 获取浏览器环境标识
+        isFirefox,
+        
+        // 统一的存储接口
+        storage: {
+            sync: {
+                get: (keys) => {
+                    if (isFirefox) {
+                        return browserAPI.storage.sync.get(keys);
+                    } else {
+                        return new Promise((resolve) => {
+                            browserAPI.storage.sync.get(keys, resolve);
+                        });
+                    }
+                },
+                set: (items) => {
+                    if (isFirefox) {
+                        return browserAPI.storage.sync.set(items);
+                    } else {
+                        return new Promise((resolve) => {
+                            browserAPI.storage.sync.set(items, resolve);
+                        });
+                    }
+                }
+            },
+            local: {
+                set: (items) => {
+                    if (isFirefox) {
+                        return browserAPI.storage.local.set(items);
+                    } else {
+                        return new Promise((resolve) => {
+                            browserAPI.storage.local.set(items, resolve);
+                        });
+                    }
+                }
+            }
+        },
+        
+        // 统一的徽章接口
+        action: {
+            setBadgeText: (details) => {
+                return browserAPI.action.setBadgeText(details);
+            },
+            setBadgeBackgroundColor: (details) => {
+                return browserAPI.action.setBadgeBackgroundColor(details);
+            },
+            setBadgeTextColor: (details) => {
+                // Firefox 和某些版本的 Chrome 可能不支持
+                if (browserAPI.action.setBadgeTextColor) {
+                    return browserAPI.action.setBadgeTextColor(details);
+                }
+            },
+            setBadgeProperties: (details) => {
+                // 仅 Chrome 支持
+                if (browserAPI.action.setBadgeProperties) {
+                    return browserAPI.action.setBadgeProperties(details);
+                }
+            }
+        },
+        
+        // 统一的标签接口
+        tabs: {
+            create: (details) => {
+                return browserAPI.tabs.create(details);
+            }
+        },
+        
+        // 统一的运行时接口
+        runtime: {
+            onStartup: browserAPI.runtime.onStartup,
+            onInstalled: browserAPI.runtime.onInstalled,
+            onMessage: browserAPI.runtime.onMessage,
+            sendMessage: (message) => {
+                return browserAPI.runtime.sendMessage(message);
+            }
+        },
+        
+        // 统一的i18n接口
+        i18n: {
+            getMessage: (messageName, substitutions) => {
+                return browserAPI.i18n.getMessage(messageName, substitutions);
+            }
+        }
+    };
+})();
+
+// ============= 全局变量定义 =============
 let fetchInterval = 300000; // 默认请求间隔为5分钟
 let accountUrl = ''; // 用于存储账户的 URL
 let fetchTimer = null; // 定时器 ID
@@ -8,37 +102,37 @@ let retryCount = 0; // 重试计数
 let maxRetries = 3; // 最大重试次数
 let consecutiveErrors = 0; // 连续错误计数
 let lastFetchTime = 0; // 上次获取时间
-let cacheTimeout = 30000; // 缓存30秒
+let cacheTimeout = 10000; // 缓存10秒（改短以确保更及时的更新）
 let notificationCache = new Map(); // 使用Map作为缓存
+let forceFresh = false; // 强制刷新标志，用于确保及时更新
 
 // 更新徽章显示
 function updateBadge(count) {
     if (count !== lastNotificationCount) {
         lastNotificationCount = count;
-        if (count > 0) {
-            // 格式化显示数量
-            let displayText = count.toString();
-            if (count > 99) {
-                displayText = '99+';
-            }
-            chrome.action.setBadgeText({ text: displayText }); // 显示未读通知数量
-
-            // 紫色徽章 (#6364ff)
-            chrome.action.setBadgeBackgroundColor({ color: '#6364ff' });
-
-            // 设置徽章文字颜色为白色
-            chrome.action.setBadgeTextColor({ color: '#ffffff' });
-
-            // 设置徽章样式使其更像圆形
-            if (chrome.action.setBadgeProperties) {
-                chrome.action.setBadgeProperties({
-                    minimum: 1, // 最小字符数，让徽章更紧凑
-                    maximum: 3  // 最大字符数，限制宽度使徽章更接近圆形
-                });
-            }
-        } else {
-            chrome.action.setBadgeText({ text: '' }); // 清除徽章
+    }
+    // 始终更新徽章显示（即使数字相同，也要确保UI同步）
+    if (count > 0) {
+        // 格式化显示数量
+        let displayText = count.toString();
+        if (count > 99) {
+            displayText = '99+';
         }
+        API.action.setBadgeText({ text: displayText }); // 显示未读通知数量
+
+        // 紫色徽章 (#6364ff)
+        API.action.setBadgeBackgroundColor({ color: '#6364ff' });
+
+        // 设置徽章文字颜色为白色
+        API.action.setBadgeTextColor({ color: '#ffffff' });
+
+        // 设置徽章样式使其更像圆形（仅 Chrome 支持）
+        API.action.setBadgeProperties({
+            minimum: 1, // 最小字符数，让徽章更紧凑
+            maximum: 3  // 最大字符数，限制宽度使徽章更接近圆形
+        });
+    } else {
+        API.action.setBadgeText({ text: '' }); // 清除徽章
     }
 }
 
@@ -55,11 +149,11 @@ async function fetchUnreadCount() {
     isFetching = true;
 
     try {
-        const { instance, accessToken, userName, limit, types, excludeTypes, interval } = await chrome.storage.sync.get();
+        const data = await API.storage.sync.get();
+        const { instance, accessToken, userName, limit, types, excludeTypes, interval } = data;
 
         if (!accessToken || !userName) {
-            chrome.action.setBadgeText({ text: '' }); // 清除徽章
-            lastNotificationCount = 0; // 重置为0
+            updateBadge(0); // 使用 updateBadge 统一处理
             isFetching = false;
             return; // 如果缺少必要的设置，直接返回
         }
@@ -96,30 +190,26 @@ async function fetchUnreadCount() {
         }
 
         if (!instanceUrl) {
-            chrome.action.setBadgeText({ text: '' }); // 清除徽章
-            lastNotificationCount = 0; // 重置为0
+            updateBadge(0); // 使用 updateBadge 统一处理
             isFetching = false;
             return;
         }
 
-        // 检查缓存
-        const cacheKey = `${instanceUrl}_${accessToken.slice(-10)}`;
-        const cached = notificationCache.get(cacheKey);
-        const now = Date.now();
-        if (cached && (now - cached.timestamp) < cacheTimeout) {
-            // 使用缓存数据，但如果用户可能已读通知，减少缓存时间
-            const effectiveCacheTimeout = cached.count > 0 ? cacheTimeout : 5000; // 如果没有通知，只缓存5秒
-            if ((now - cached.timestamp) < effectiveCacheTimeout) {
-                if (cached.count !== lastNotificationCount) {
-                    lastNotificationCount = cached.count;
-                    updateBadge(cached.count);
-                }
+        // 检查缓存（除非强制刷新）
+        if (!forceFresh) {
+            const cacheKey = `${instanceUrl}_${accessToken.slice(-10)}`;
+            const cached = notificationCache.get(cacheKey);
+            const now = Date.now();
+            if (cached && (now - cached.timestamp) < cacheTimeout) {
+                // 使用缓存数据
+                updateNotificationCount(cached.count);
                 isFetching = false;
                 return;
             }
         }
+        forceFresh = false; // 重置强制刷新标志
 
-        // 先尝试直接使用 unread_count 端点（不带任何参数）
+        // 尝试直接使用 unread_count 端点（不带任何参数）
         const unreadCountUrl = new URL(`https://${instanceUrl}/api/v1/notifications/unread_count`);
 
         const response = await fetch(unreadCountUrl, {
@@ -153,29 +243,32 @@ async function fetchUnreadCount() {
             return;
         } else if (response.status === 401) {
             // 认证失败
-            chrome.storage.local.set({
+            await API.storage.local.set({
                 lastError: {
                     message: 'invalid_token',
                     timestamp: Date.now(),
                     count: consecutiveErrors
                 }
             });
-            chrome.action.setBadgeText({ text: '!' });
-            chrome.action.setBadgeBackgroundColor({ color: '#e53e3e' });
-            chrome.action.setBadgeTextColor({ color: '#ffffff' });
+            // 不更改徽章，保持原样显示错误状态
+            API.action.setBadgeText({ text: '!' });
+            API.action.setBadgeBackgroundColor({ color: '#e53e3e' });
+            API.action.setBadgeTextColor({ color: '#ffffff' });
+            lastNotificationCount = 0; // 重置计数，这样即使重新授权，徽章也能更新
             return;
         } else if (response.status === 429) {
             // 请求过于频繁
-            chrome.storage.local.set({
+            await API.storage.local.set({
                 lastError: {
                     message: 'rate_limit_exceeded',
                     timestamp: Date.now(),
                     count: consecutiveErrors
                 }
             });
-            chrome.action.setBadgeText({ text: '!' });
-            chrome.action.setBadgeBackgroundColor({ color: '#f59e0b' });
-            chrome.action.setBadgeTextColor({ color: '#ffffff' });
+            API.action.setBadgeText({ text: '!' });
+            API.action.setBadgeBackgroundColor({ color: '#f59e0b' });
+            API.action.setBadgeTextColor({ color: '#ffffff' });
+            lastNotificationCount = 0; // 重置计数
             return;
         }
 
@@ -191,12 +284,12 @@ async function fetchUnreadCount() {
             setTimeout(fetchUnreadCount, 5000 * retryCount); // 递增延迟重试
         } else {
             // 显示错误状态
-            chrome.action.setBadgeText({ text: '!' });
-            chrome.action.setBadgeBackgroundColor({ color: '#e53e3e' }); // 红色
-            chrome.action.setBadgeTextColor({ color: '#ffffff' });
+            API.action.setBadgeText({ text: '!' });
+            API.action.setBadgeBackgroundColor({ color: '#e53e3e' }); // 红色
+            API.action.setBadgeTextColor({ color: '#ffffff' });
 
             // 记录错误但不控制台输出
-            chrome.storage.local.set({
+            await API.storage.local.set({
                 lastError: {
                     message: error.message,
                     timestamp: Date.now(),
@@ -229,7 +322,7 @@ async function getAccountUrl(instanceUrl, userName, accessToken) {
         if (accountResponse.ok) {
             const accountData = await accountResponse.json();
             accountUrl = accountData.url;
-            chrome.storage.sync.set({ accountUrl });
+            await API.storage.sync.set({ accountUrl });
         }
     } catch (error) {
         // 忽略错误，不影响主要功能
@@ -254,15 +347,14 @@ async function getAccountAndFetchNotifications(instanceUrl, userName, accessToke
 
         if (!accountResponse.ok) {
             console.error('Error fetching account ID:', accountResponse.statusText);
-            chrome.action.setBadgeText({ text: '' });
-            lastNotificationCount = 0;
+            updateBadge(0); // 使用统一的函数处理
             return;
         }
 
         const accountData = await accountResponse.json();
         const accountId = accountData.id;
         accountUrl = accountData.url;
-        chrome.storage.sync.set({ accountUrl });
+        await API.storage.sync.set({ accountUrl });
 
         // 尝试使用带 account_id 的 unread_count 端点
         const unreadCountUrl = new URL(`https://${instanceUrl}/api/v1/notifications/unread_count?account_id=${accountId}`);
@@ -296,8 +388,7 @@ async function getAccountAndFetchNotifications(instanceUrl, userName, accessToke
             await fetchNotificationCountAlternative(instanceUrl, accessToken, limit, types, excludeTypes);
         }
     } catch (error) {
-        chrome.action.setBadgeText({ text: '' });
-        lastNotificationCount = 0;
+        updateBadge(0); // 使用统一的函数处理
     }
 }
 
@@ -360,12 +451,10 @@ async function fetchNotificationCountAlternative(instanceUrl, accessToken, limit
             // 更新通知数量
             updateNotificationCount(unreadCount);
         } else {
-            chrome.action.setBadgeText({ text: '' });
-            lastNotificationCount = 0;
+            updateBadge(0); // 使用统一的函数处理
         }
     } catch (error) {
-        chrome.action.setBadgeText({ text: '' });
-        lastNotificationCount = 0;
+        updateBadge(0); // 使用统一的函数处理
     }
 }
 
@@ -386,7 +475,8 @@ function restartFetchTimer() {
 // 初始化时先获取设置，然后启动定时器
 async function initializeExtension() {
     // 读取设置以获取正确的轮询间隔
-    const { interval } = await chrome.storage.sync.get(['interval']);
+    const data = await API.storage.sync.get(['interval']);
+    const { interval } = data;
     if (interval) {
         fetchInterval = interval * 1000; // 将秒转换为毫秒
     }
@@ -398,29 +488,32 @@ async function initializeExtension() {
 initializeExtension(); // 使用新的初始化函数
 
 // 监听浏览器启动事件
-chrome.runtime.onStartup.addListener(() => {
+API.runtime.onStartup.addListener(() => {
     fetchUnreadCount(); // 在浏览器启动时调用 fetchUnreadCount 函数
 });
 
 // 在扩展安装时调用该函数
-chrome.runtime.onInstalled.addListener(() => {
+API.runtime.onInstalled.addListener(() => {
     fetchUnreadCount(); // 在扩展安装时调用 fetchUnreadCount 函数
 });
 
 
 // 监听来自 popup.js 的消息
-chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+API.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     if (request.action === "settingsUpdated") {
+        forceFresh = true; // 设置强制刷新标志
         fetchUnreadCount(); // 调用 fetchUnreadCount 函数
     } else if (request.action === "openMastodon") {
         // 处理跳转到 Mastodon 实例的请求
-        chrome.tabs.create({ url: request.url });
-    } else if (request.action === "testNotifications") {
-        // 测试通知数量
+        API.tabs.create({ url: request.url });
+    } else if (request.action === "testNotifications" || request.action === "refreshNotifications") {
+        // 测试通知数量或手动刷新
+        forceFresh = true; // 设置强制刷新标志，跳过缓存
         fetchUnreadCount();
     } else if (request.action === "getNotificationCount") {
         // 获取当前的 userName
-        chrome.storage.sync.get(['userName'], (data) => {
+        (async () => {
+            const data = await API.storage.sync.get(['userName']);
             // 从 userName 中提取用户名部分（去掉 @ 和实例）
             let userHandle = '';
             if (data.userName && data.userName.startsWith('@') && data.userName.includes('@', 1)) {
@@ -434,7 +527,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
                 instanceUrl: lastInstanceUrl,
                 userName: userHandle
             });
-        });
+        })();
     }
     return true; // 保持消息通道打开以支持异步响应
 });
