@@ -10,9 +10,9 @@
     "clean": "rm -rf dist"
   },
   "devDependencies": {
-    "web-ext": "^7.11.0",
-    "zip-a-folder": "^3.1.4",
-    "tslib": "^2.6.2"
+    "tslib": "^2.8.1",
+    "web-ext": "^7.12.0",
+    "zip-a-folder": "^3.1.9"
   },
   "packageManager": "pnpm@8.15.0"
 }
