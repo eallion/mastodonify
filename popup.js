@@ -50,8 +50,8 @@ function updateAppSettingsLink(userName) {
   const appSettingsLinkElement = document.getElementById('app_settings_link');
   if (!appSettingsLinkElement) return;
 
-  // 清空现有内容
-  appSettingsLinkElement.innerHTML = '';
+    // 清空现有内容
+    appSettingsLinkElement.textContent = '';
 
   if (userName && userName.startsWith('@') && userName.includes('@', 1)) {
     // 解析实例域名
@@ -80,8 +80,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('setting_title').textContent = API.i18n.getMessage('setting_title');
     }
     if (document.getElementById('description')) {
-        document.getElementById('description').innerHTML = API.i18n.getMessage('description');
-        document.getElementById('docs').innerHTML = API.i18n.getMessage('docs');
+        document.getElementById('description').textContent = API.i18n.getMessage('description');
+        document.getElementById('docs').textContent = API.i18n.getMessage('docs');
     }
     document.getElementById('access_token_label').textContent = API.i18n.getMessage('access_token_label');
     document.getElementById('user_name_label').textContent = API.i18n.getMessage('user_name_label');

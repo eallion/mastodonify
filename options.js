@@ -2,7 +2,7 @@
 const API = (() => {
     const isFirefox = typeof browser !== 'undefined';
     const browserAPI = isFirefox ? browser : chrome;
-    
+
     return {
         isFirefox,
         storage: {
@@ -42,12 +42,53 @@ const API = (() => {
 
 // ============= 设置页面初始化 =============
 document.addEventListener('DOMContentLoaded', () => {
-    // 加载当前设置
+    // 国际化文本（按需存在则设置）
+    const setText = (id, key) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = API.i18n.getMessage(key);
+    };
+
+    setText('setting_title', 'setting_title');
+    setText('setting_title_h1', 'setting_title_h1');
+    setText('description', 'description');
+    setText('docs', 'docs');
+    setText('access_token_label', 'access_token_label');
+    setText('user_name_label', 'user_name_label');
+    setText('limit_label', 'limit_label');
+    setText('exclude_types_label', 'exclude_types_label');
+    setText('interval_label', 'interval_label');
+    setText('expand_option', 'expand_option');
+    setText('button_save', 'button_save');
+
+    // 处理可选字段的展开/收起
+    const optionalFields = document.getElementById('optional-fields');
+    const toggleButton = document.getElementById('toggle-optional');
+    if (optionalFields && toggleButton) {
+        optionalFields.style.display = 'block';
+        toggleButton.textContent = API.i18n.getMessage('close_option');
+        toggleButton.addEventListener('click', function () {
+            if (optionalFields.style.display === 'none') {
+                optionalFields.style.display = 'block';
+                toggleButton.textContent = API.i18n.getMessage('close_option');
+            } else {
+                optionalFields.style.display = 'none';
+                toggleButton.textContent = API.i18n.getMessage('expand_option');
+            }
+        });
+    }
+
+    // 加载当前设置并初始化表单
     (async () => {
         const data = await API.storage.sync.get(['instance', 'accessToken', 'userName', 'limit', 'types', 'excludeTypes', 'interval']);
-        document.getElementById('accessToken').value = data.accessToken || '';
-        document.getElementById('userName').value = data.userName || '';
-        document.getElementById('limit').value = data.limit || '100';
+        const setValue = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.value = value;
+        };
+
+        setValue('accessToken', data.accessToken || '');
+        setValue('userName', data.userName || '');
+        setValue('limit', data.limit || '100');
+        setValue('interval', data.interval || '300');
 
         // 设置排除通知类型的复选框
         const excludeTypes = Array.isArray(data.excludeTypes) ? data.excludeTypes : [];
@@ -55,90 +96,51 @@ document.addEventListener('DOMContentLoaded', () => {
         excludeCheckboxes.forEach(checkbox => {
             checkbox.checked = excludeTypes.includes(checkbox.value);
         });
-
-        document.getElementById('interval').value = data.interval || '300';
-    });
-
-    // 处理表单提交
-    document.getElementById('settings-form').addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        // 从 userName 中提取实例
-        const userName = document.getElementById('userName').value;
-        let instance = '';
-
-        if (userName && userName.startsWith('@') && userName.includes('@', 1)) {
-            const parts = userName.split('@');
-            instance = parts[2]; // 提取实例地址
-        }
-
-        const accessToken = document.getElementById('accessToken').value;
-        const limit = document.getElementById('limit').value || 100;
-        const types = []; // 默认获取所有类型的通知
-        const excludeTypes = Array.from(document.querySelectorAll('input[name="excludeType"]:checked'))
-            .map(checkbox => checkbox.value); // 获取选中的排除类型
-        const interval = document.getElementById('interval').value || 300; // 获取interval的值，默认为300秒（5分钟）
-
-        // 保存设置（不再需要单独保存 instance，因为可以从 userName 解析）
-        (async () => {
-            await API.storage.sync.set({ instance, accessToken, userName, limit, types, excludeTypes, interval });
-            const messageElement = document.getElementById('message');
-            messageElement.textContent = API.i18n.getMessage('settings_saved');
-            messageElement.style.display = 'block';
-            messageElement.style.opacity = '1'; // 显示消息
-
-            // 调用需要执行的函数
-            onSettingsUpdated(); // 调用函数
-
-            // 设定一段时间后隐藏消息
-            setTimeout(() => {
-                messageElement.style.opacity = '0'; // 隐藏消息
-                setTimeout(() => {
-                    messageElement.style.display = 'none'; // 完全隐藏
-                }, 500); // 等待过渡效果完成
-            }, 2000); // 2 秒后隐藏
-        })();
-
-    });
     })();
+
+    // 表单提交处理
+    const form = document.getElementById('settings-form');
+    if (form) {
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const userName = (document.getElementById('userName') || {}).value || '';
+            let instance = '';
+            if (userName && userName.startsWith('@') && userName.includes('@', 1)) {
+                const parts = userName.split('@');
+                instance = parts[2] || '';
+            }
+
+            const accessToken = (document.getElementById('accessToken') || {}).value || '';
+            const limit = (document.getElementById('limit') || {}).value || 100;
+            const types = [];
+            const excludeTypes = Array.from(document.querySelectorAll('input[name="excludeType"]:checked'))
+                .map(checkbox => checkbox.value);
+            const interval = (document.getElementById('interval') || {}).value || 300;
+
+            (async () => {
+                await API.storage.sync.set({ instance, accessToken, userName, limit, types, excludeTypes, interval });
+                const messageElement = document.getElementById('message');
+                if (messageElement) {
+                    messageElement.textContent = API.i18n.getMessage('settings_saved');
+                    messageElement.style.display = 'block';
+                    messageElement.style.opacity = '1';
+
+                    onSettingsUpdated();
+
+                    setTimeout(() => {
+                        messageElement.style.opacity = '0';
+                        setTimeout(() => {
+                            messageElement.style.display = 'none';
+                        }, 500);
+                    }, 2000);
+                }
+            })();
+        });
+    }
 });
-
-document.addEventListener('DOMContentLoaded', function () {
-    // 设置国际化文本
-    document.getElementById('setting_title').textContent = API.i18n.getMessage('setting_title');
-    document.getElementById('setting_title_h1').textContent = API.i18n.getMessage('setting_title_h1');
-    document.getElementById('description').textContent = API.i18n.getMessage('description');
-    document.getElementById('docs').textContent = API.i18n.getMessage('docs');
-    document.getElementById('access_token_label').textContent = API.i18n.getMessage('access_token_label');
-    document.getElementById('user_name_label').textContent = API.i18n.getMessage('user_name_label');
-    document.getElementById('limit_label').textContent = API.i18n.getMessage('limit_label');
-    document.getElementById('exclude_types_label').textContent = API.i18n.getMessage('exclude_types_label');
-    document.getElementById('interval_label').textContent = API.i18n.getMessage('interval_label');
-    document.getElementById('expand_option').textContent = API.i18n.getMessage('expand_option');
-    document.getElementById('button_save').textContent = API.i18n.getMessage('button_save');
-  
-    // 处理选填字段的展开和收起
-    const optionalFields = document.getElementById('optional-fields');
-    const toggleButton = document.getElementById('toggle-optional');
-
-    // 右键选项页面始终展开所有设置项
-    optionalFields.style.display = 'block';
-    toggleButton.textContent = API.i18n.getMessage('close_option');
-
-    toggleButton.addEventListener('click', function () {
-        if (optionalFields.style.display === 'none') {
-            optionalFields.style.display = 'block';
-            toggleButton.textContent = API.i18n.getMessage('close_option'); // 更新按钮文本
-        } else {
-            optionalFields.style.display = 'none';
-            toggleButton.textContent = API.i18n.getMessage('expand_option'); // 更新按钮文本
-        }
-    });
-});
-
 
 // 定义在设置更新时调用的函数
 function onSettingsUpdated() {
-    // 发送消息到 background.js
     API.runtime.sendMessage({ action: "settingsUpdated" });
 }
