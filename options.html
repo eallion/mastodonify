@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Mastodonify Settings</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+    h1 {
+      color: #6364ff;
+    }
+    .form-group {
+      margin-bottom: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="number"], input[type="password"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .filters {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .checkbox-label {
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .checkbox-label input {
+      margin-right: 8px;
+    }
+    button {
+      background-color: #6364ff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #5655d9;
+    }
+    #token-help code {
+      font-family: monospace;
+      background-color: #f4f4f9;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    #status {
+      margin-top: 10px;
+      font-weight: bold;
+      min-height: 20px;
+    }
+    .help-text {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+    a {
+      color: #6364ff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1 data-i18n="settingsTitle">Mastodonify Settings</h1>
+
+  <div class="form-group">
+    <label for="account"><span data-i18n="accountLabel">Account</span> (<span data-i18n="examplePrefix">e.g. </span><a href="https://e5n.cc/@eallion" target="_blank">@eallion@e5n.cc</a>)</label>
+    <input type="text" id="account" placeholder="@eallion@e5n.cc">
+  </div>
+
+  <div class="form-group">
+    <label for="token" data-i18n="tokenLabel">Access Token</label>
+    <input type="password" id="token" placeholder="Your access token">
+    <div id="token-help" class="help-text"></div>
+  </div>
+
+  <div class="form-group">
+    <label for="interval" data-i18n="intervalLabel">Check Interval (seconds)</label>
+    <input type="number" id="interval" value="300" min="60">
+  </div>
+
+  <div class="form-group">
+    <label data-i18n="ignoreLabel">Notification Types to IGNORE:</label>
+    <div class="filters">
+      <label class="checkbox-label"><input type="checkbox" class="filter" value="mention"> <span data-i18n="filter_mention">Mention</span></label>
+      <label class="checkbox-label"><input type="checkbox" class="filter" value="status"> <span data-i18n="filter_status">Status</span></label>
+      <label class="checkbox-label"><input type="checkbox" class="filter" value="reblog"> <span data-i18n="filter_reblog">Reblog</span></label>
+      <label class="checkbox-label"><input type="checkbox" class="filter" value="follow"> <span data-i18n="filter_follow">Follow</span></label>
+      <label class="checkbox-label"><input type="checkbox" class="filter" value="follow_request"> <span data-i18n="filter_follow_request">Follow Request</span></label>
+      <label class="checkbox-label"><input type="checkbox" class="filter" value="favourite"> <span data-i18n="filter_favourite">Favourite</span></label>
+      <label class="checkbox-label"><input type="checkbox" class="filter" value="poll"> <span data-i18n="filter_poll">Poll</span></label>
+      <label class="checkbox-label"><input type="checkbox" class="filter" value="update"> <span data-i18n="filter_update">Update</span></label>
+      <label class="checkbox-label"><input type="checkbox" class="filter" value="admin.sign_up"> <span data-i18n="filter_admin_sign_up">Admin Sign Up</span></label>
+      <label class="checkbox-label"><input type="checkbox" class="filter" value="admin.report"> <span data-i18n="filter_admin_report">Admin Report</span></label>
+    </div>
+  </div>
+
+  <div class="form-group">
+      <p><a href="https://github.com/eallion/mastodonify" target="_blank" data-i18n="helpLink">Need help? Visit the Project README.</a></p>
+  </div>
+
+  <button id="save" data-i18n="saveBtn">Save Settings</button>
+  <button id="test" style="background-color: #4CAF50; margin-left: 10px;" data-i18n="testBtn">Test Connection</button>
+  <div id="status"></div>
+
+  <script src="options.js"></script>
+</body>
+</html>

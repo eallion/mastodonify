@@ -1,126 +1,39 @@
 {
-  "extDesc": {
-    "message": "Mastodon 未读通知数提示。",
-    "description": "Mastodonify description"
-  },
-  "setting_title": {
-    "message": "Mastodonify 设置",
-    "description": "Mastodonify 设置"
-  },
-  "setting_title_h1": {
-    "message": "设置",
-    "description": "Mastodonify 设置"
-  },
-  "docs": {
-    "message": "文档 - [<a href='https://github.com/eallion/mastodonify?tab=readme-ov-file#mastodonify' target='_blank' rel='noopener noreferrer'>设置教程</a>]",
-    "description": "Mastodonify 设置文档"
-  },
-  "description": {
-    "message": "说明：支持 Mastodon 版本 ≥ <a href='https://github.com/mastodon/mastodon/releases/tag/v4.3.0' target='_blank' rel='noopener noreferrer'>v4.3.0</a>",
-    "description": "Mastodonify 设置说明"
-  },
-  "access_token_label": {
-    "message": "[必填] 令牌 Token",
-    "description": "设置 Access Token 访问令牌"
-  },
-  "user_name_label": {
-    "message": "[必填] Mastodon 账号",
-    "description": "设置用户名"
-  },
-    "limit_label": {
-    "message": "[选填] 每次请求通知数（1-1000）",
-    "description": "设置请求数量限制"
-  },
-    "exclude_types_label": {
-    "message": "[选填] 排除的通知类型",
-    "description": "设置需要排除的通知类型（不想看的通知类型）"
-  },
-  "interval_label": {
-    "message": "[选填] 刷新时间间隔（秒）",
-    "description": "设置刷新的时间间隔"
-  },
-  "expand_option": {
-    "message": "展开选项",
-    "description": "展开选项"
-  },
-  "close_option": {
-    "message": "收起选项",
-    "description": "收起选项"
-  },
-  "button_save": {
-    "message": "保存",
-    "description": "保存按钮"
-  },
-  "basic_info_title": {
-    "message": "基本信息",
-    "description": "基本信息区块标题"
-  },
-  "advanced_settings_title": {
-    "message": "高级设置",
-    "description": "高级设置区块标题"
-  },
-  "username_hint": {
-    "message": "e.g. @eallion@e5n.cc",
-    "description": "用户名输入框提示"
-  },
-  "token_hint": {
-    "message": "请访问您实例的",
-    "description": "令牌输入框提示第1部分"
-  },
-  "app_settings_page": {
-    "message": "应用设置页面",
-    "description": "应用设置页面文本"
-  },
-  "token_hint_suffix": {
-    "message": "创建访问令牌",
-    "description": "令牌输入框提示第2部分"
-  },
-  "settings_button": {
-    "message": "设置",
-    "description": "设置按钮文本"
-  },
-  "unread_notifications_text": {
-    "message": "条未读通知",
-    "description": "未读通知文本"
-  },
-  "no_new_notifications": {
-    "message": "没有新通知",
-    "description": "没有新通知文本"
-  },
-  "configuration_error": {
-    "message": "配置错误",
-    "description": "配置错误文本"
-  },
-  "settings_saved": {
-    "message": "设置已保存！",
-    "description": "设置已保存！"
-  },
-  "open_mastodon_label": {
-    "message": "打开 Mastodon",
-    "description": "打开 Mastodon 按钮"
-  },
-  "test_notifications_label": {
-    "message": "测试通知",
-    "description": "测试通知按钮"
-  },
-  "loading": {
-    "message": "加载中...",
-    "description": "加载状态文本"
-  },
-  "network_error": {
-    "message": "网络错误",
-    "description": "网络错误提示"
-  },
-  "rate_limit_exceeded": {
-    "message": "请求过于频繁，请稍后再试",
-    "description": "API 限制提示"
-  },
-  "invalid_token": {
-    "message": "访问令牌无效，请检查设置",
-    "description": "无效令牌提示"
-  },
-  "invalid_instance": {
-    "message": "实例地址无效，请检查用户名格式",
-    "description": "无效实例提示"
-  }
+  "extName": { "message": "Mastodonify" },
+  "extDesc": { "message": "在图标上显示 Mastodon 未读通知数量。" },
+  "settingsTitle": { "message": "Mastodonify 设置" },
+  "accountLabel": { "message": "账号" },
+  "examplePrefix": { "message": "例如 " },
+  "tokenLabel": { "message": "访问令牌 (Access Token)" },
+  "intervalLabel": { "message": "检查间隔 (秒)" },
+  "ignoreLabel": { "message": "忽略以下类型的通知：" },
+  "filter_mention": { "message": "提及 (Mention)" },
+  "filter_status": { "message": "状态 (Status)" },
+  "filter_reblog": { "message": "转嘟 (Reblog)" },
+  "filter_follow": { "message": "关注 (Follow)" },
+  "filter_follow_request": { "message": "关注请求 (Follow Request)" },
+  "filter_favourite": { "message": "收藏 (Favourite)" },
+  "filter_poll": { "message": "投票 (Poll)" },
+  "filter_update": { "message": "更新 (Update)" },
+  "filter_admin_sign_up": { "message": "管理员：新用户 (Sign Up)" },
+  "filter_admin_report": { "message": "管理员：举报 (Report)" },
+  "helpLink": { "message": "需要帮助？访问项目 README。" },
+  "saveBtn": { "message": "保存设置" },
+  "testBtn": { "message": "测试连接" },
+  "setupMsg": { "message": "请先配置 Mastodonify" },
+  "openSettingsBtn": { "message": "打开设置" },
+  "checking": { "message": "检查中..." },
+  "noUnread": { "message": "没有未读通知" },
+  "suffixNotif": { "message": "条通知" },
+  "statusSaved": { "message": "设置已保存。" },
+  "statusEnterAll": { "message": "请输入账号和 Token。" },
+  "statusInvalidAcct": { "message": "账号格式无效。" },
+  "statusConnSuccess": { "message": "连接成功！" },
+  "statusConnFail": { "message": "连接失败" },
+  "statusError": { "message": "错误" },
+  "filter_severed_relationships": { "message": "关系断开" },
+  "filter_moderation_warning": { "message": "管理警告" },
+  "tokenHelpPre": { "message": "请访问您实例的 " },
+  "tokenHelpLink": { "message": "应用设置页面" },
+  "tokenHelpPost": { "message": " 创建访问令牌。<br>仅需 <code>read:notifications</code> 权限。" }
 }

@@ -1,202 +1,128 @@
 # Mastodonify
 
-English | [[中文说明](README.cn.md)]
+![Icon](icons/mastodonify-128.png)
 
-Display unread notifications count from Mastodon extension for Chrome and Firefox.
+**Mastodonify** is a lightweight, cross-browser extension (Chrome & Firefox) that notifies you of unread Mastodon notifications directly on the extension icon. It supports periodic polling, customizable filters, and synchronization with your server-side read markers.
 
-## Screenshot
+[中文说明](#mastodonify-中文说明)
 
-![](screenshots/mastodonify_1280_800.png)
+---
 
 ## Features
 
-- **Smart Popup UI**: Shows notification count when configured, settings when needed
-- **Notification Badge**: Displays unread count on extension icon
-- **Click Actions**: Click notification area to jump to notifications or profile
-- **Auto-parse Instance**: Extracts instance from username automatically
-- **Performance Optimized**: Built-in caching and intelligent refresh
-- **Multi-language Support**: English and Chinese interface
-- **Cross-browser Support**: Supports both Chrome and Firefox
+- **Cross-Browser Support**: Works on Chrome (Manifest V3) and Firefox (MV3).
+- **Badge Notifications**: Displays the exact number of unread notifications on the extension icon.
+- **Smart Sync**: Uses Mastodon's Markers API to sync read status across devices (if you read it on your phone, the badge clears).
+- **Customizable Filters**: Choose to ignore specific notification types (e.g., Favourites, Reblogs, Polls).
+- **Internationalization**: Available in English, Simplified Chinese (简体中文), and Japanese (日本語).
+- **Countdown Timer**: Visual progress bar on the popup button showing when the next check will occur.
 
 ## Installation
 
-### Chrome Version
+### Chrome / Edge / Brave
 
-1. Download the latest version `mastodonify-chrome-v1.0.2.zip` from [Releases](https://github.com/eallion/mastodonify/releases)
-2. Unzip the file
-3. Open Chrome browser and go to `chrome://extensions/`
-4. Enable "Developer mode"
-5. Click "Load unpacked"
-6. Select the unzipped folder
+1. Download the latest `mastodonify-chrome.zip` from releases.
+2. Unzip the file.
+3. Open `chrome://extensions/` in your browser.
+4. Enable **Developer mode** in the top right corner.
+5. Click **Load unpacked** and select the unzipped directory.
 
-### Firefox Version
+### Firefox
 
-1. Download the latest version `mastodonify-firefox-v1.0.2.zip` from [Releases](https://github.com/eallion/mastodonify/releases)
-2. Unzip the file
-3. Open Firefox browser and go to `about:debugging`
-4. Click "This Firefox"
-5. Click "Load Temporary Add-on"
-6. Select the manifest.json file from the unzipped folder
+1. Download the latest `mastodonify-firefox.zip` from releases.
+2. Unzip the file.
+3. Open `about:debugging` in Firefox.
+4. Click **This Firefox** on the left sidebar.
+5. Click **Load Temporary Add-on...**.
+6. Select the `manifest.json` file inside the unzipped directory.
 
-## Quick Setup
+## Configuration
 
-### Required Settings
-
-#### 1. Mastodon Username
-
-Format: `@eallion@e5n.cc` (include both username and instance)
-
-#### 2. Access Token
-
-1. Go to your Mastodon instance: `Settings` > `Development`
-2. Click `New application`
-3. Fill in `Application name` (any name)
-4. Check only `read:notifications` scope
-5. Create and copy `Your access token`
-6. Paste it into the extension settings
-
-> Quick link: `https://{YOUR_INSTANCE}/settings/applications/`
-
-### Optional Settings
-
-Click the settings button next to notification count to access advanced options:
-
-#### 3. Notification Limit
-
-- Default: 100 notifications
-- Range: 1-1000
-- Keep default unless you receive high volume of notifications
-
-#### 4. Exclude Notification Types
-
-Check boxes to exclude specific notification types:
-
-- `mention` - Mentions in posts
-- `status` - New posts from followed users
-- `reblog` - Boosts of your posts
-- `follow` - New followers
-- `follow_request` - Follow requests
-- `favourite` - Favorites of your posts
-- `poll` - Poll completions
-- `update` - Edited post notifications
-- `admin.sign_up` - New user sign-ups
-- `admin.report` - New reports
-
-#### 5. Refresh Interval
-
-- Default: 300 seconds (5 minutes)
-- Minimum: 60 seconds
-- Longer intervals recommended to avoid rate limiting
-
-## Usage
-
-1. **First Time**: Extension opens settings automatically
-2. **Configured**: Shows notification count with badge
-3. **Click Notifications**:
-   - With unread: Opens notifications page
-   - Without unread: Opens your profile
-4. **Settings**: Click gear icon to modify configuration
-
-## Tips
-
-- The instance is automatically extracted from your username
-- Extension caches notifications for 30 seconds to reduce API calls
-- Error states show in red with retry logic
-- Badge shows "99+" for 100+ notifications
-
-<details><summary>
-Technical Details
-</summary>
-
-- Uses Mastodon API v2 `/api/v1/notifications/unread_count`
-- Implements exponential backoff for errors
-- Stores settings securely in browser sync storage
-- Manifest V3 compliant
-
-</details>
+1. Click the Mastodonify icon in your browser toolbar.
+2. Click **Open Settings**.
+3. **Account**: Enter your full handle (e.g., `@user@mastodon.social`).
+4. **Access Token**:
+   - Go to your instance's **Preferences** -> **Development**.
+   - Click **New Application**.
+   - Name it "Mastodonify".
+   - Ensure `read:notifications` scope is selected.
+   - Click **Submit** and copy the **Access Token**.
+   - Paste the token into the extension settings.
+5. **Check Interval**: Set how often (in seconds) to check for notifications (Default: 300s).
+6. **Filters**: Check any notification types you want to **ignore**.
+7. Click **Save Settings**.
 
 ## Development
 
-### Prerequisites
+### Build
 
-- Node.js 16+
-- pnpm
-
-### Install Dependencies
+To create the distributable zip files for Chrome and Firefox:
 
 ```bash
-pnpm install
+./build.sh
 ```
 
-### Build Commands
+This will generate:
+
+- `release/mastodonify-chrome.zip`
+- `release/mastodonify-firefox.zip`
+
+---
+
+# Mastodonify (中文说明)
+
+**Mastodonify** 是一个轻量级的跨浏览器扩展（支持 Chrome 和 Firefox），能够在扩展图标上实时显示 Mastodon 的未读通知数量。它支持定时轮询、自定义过滤，并能与服务器端的阅读标记同步。
+
+## 功能特性
+
+- **跨浏览器支持**：完美支持 Chrome (Manifest V3) 和 Firefox (MV3)。
+- **角标提醒**：在扩展图标上直接显示未读通知的确切数量。
+- **智能同步**：利用 Mastodon Markers API 跨设备同步阅读状态（如果您在手机上已读，扩展角标会自动清除）。
+- **自定义过滤**：可选择忽略特定类型的通知（如：点赞、转嘟、投票等）。
+- **多语言支持**：内置英语、简体中文、日语支持。
+- **倒计时显示**：点击图标弹出的按钮上带有可视化进度条，显示距离下一次检查的剩余时间。
+
+## 安装指南
+
+### Chrome / Edge / Brave
+
+1. 下载最新的 `mastodonify-chrome.zip` 压缩包。
+2. 解压文件。
+3. 在浏览器地址栏输入 `chrome://extensions/` 并回车。
+4. 打开右上角的 **开发者模式 (Developer mode)**。
+5. 点击 **加载已解压的扩展程序 (Load unpacked)**，选择解压后的文件夹。
+
+### Firefox
+
+1. 下载最新的 `mastodonify-firefox.zip` 压缩包。
+2. 解压文件。
+3. 在浏览器地址栏输入 `about:debugging` 并回车。
+4. 点击左侧的 **此 Firefox (This Firefox)**。
+5. 点击 **临时载入附加组件 (Load Temporary Add-on...)**。
+6. 选择解压文件夹中的 `manifest.json` 文件。
+
+## 设置说明
+
+1. 点击浏览器工具栏上的 Mastodonify 图标。
+2. 点击 **打开设置 (Open Settings)**。
+3. **账号 (Account)**：输入您的完整账号（例如 `@user@mastodon.social`）。
+4. **访问令牌 (Access Token)**：
+   - 登录您的 Mastodon 实例，进入 **首选项 (Preferences)** -> **开发 (Development)**。
+   - 点击 **新建应用 (New Application)**。
+   - 输入名称 "Mastodonify"。
+   - 确保勾选 `read:notifications` 权限。
+   - 点击 **提交 (Submit)**，然后复制生成的 **访问令牌 (Access Token)**。
+   - 将令牌粘贴到扩展设置中。
+5. **检查间隔**：设置检查通知的频率（秒），默认为 300 秒（5 分钟）。
+6. **忽略类型**：勾选您不想看到的通知类型（例如：不想看“点赞”通知）。
+7. 点击 **保存设置 (Save Settings)**。
+
+## 开发构建
+
+运行以下脚本即可生成适用于 Chrome 和 Firefox 的发布包：
 
 ```bash
-# Build all platforms
-pnpm run build
-
-# Build Chrome version only
-pnpm run build:chrome
-
-# Build Firefox version only
-pnpm run build:firefox
-
-# Package for distribution
-pnpm run package
-
-# Clean build files
-pnpm run clean
+./build.sh
 ```
 
-### Project Structure
-
-```text
-mastodonify/
-├── src/                # Source code
-├── build/              # Build scripts
-├── dist/               # Build output
-│   ├── chrome/         # Chrome version
-│   └── firefox/        # Firefox version
-├── release/            # Package files
-├── _locales/           # Localization files
-├── icons/              # Icon files
-├── manifest.json       # Extension manifest
-└── popup.html          # Popup page
-```
-
-## Contributing
-
-Issues and Pull Requests are welcome!
-
-## License
-
-[MIT License](LICENSE)
-
-## Changelog
-
-### v1.0.5
-
-- ✨ Performance optimization
-
-### v1.0.4
-
-- ✨ Performance optimization
-
-### v1.0.3
-
-- ✨ Performance optimization
-
-### v1.0.2
-
-- 🆕 Added Firefox support
-- 🛠️ Optimized build system
-- 📦 Unified build and packaging
-
-### v1.0.1
-
-- 🔧 Fixed notification detection issues
-- 🎨 Improved UI
-
-### v1.0.0
-
-- 🎉 Initial release
-- ✨ Notification detection and display
+生成的文件位于 `release/` 目录下。

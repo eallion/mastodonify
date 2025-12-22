@@ -1,146 +1,166 @@
-// ============= Firefox/Chrome 兼容性处理 =============
-const API = (() => {
-    const isFirefox = typeof browser !== 'undefined';
-    const browserAPI = isFirefox ? browser : chrome;
-
-    return {
-        isFirefox,
-        storage: {
-            sync: {
-                get: (keys) => {
-                    if (isFirefox) {
-                        return browserAPI.storage.sync.get(keys);
-                    } else {
-                        return new Promise((resolve) => {
-                            browserAPI.storage.sync.get(keys, resolve);
-                        });
-                    }
-                },
-                set: (items) => {
-                    if (isFirefox) {
-                        return browserAPI.storage.sync.set(items);
-                    } else {
-                        return new Promise((resolve) => {
-                            browserAPI.storage.sync.set(items, resolve);
-                        });
-                    }
-                }
-            }
-        },
-        runtime: {
-            sendMessage: (message) => {
-                return browserAPI.runtime.sendMessage(message);
-            }
-        },
-        i18n: {
-            getMessage: (messageName, substitutions) => {
-                return browserAPI.i18n.getMessage(messageName, substitutions);
-            }
-        }
-    };
-})();
-
-// ============= 设置页面初始化 =============
-document.addEventListener('DOMContentLoaded', () => {
-    // 国际化文本（按需存在则设置）
-    const setText = (id, key) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = API.i18n.getMessage(key);
-    };
-
-    setText('setting_title', 'setting_title');
-    setText('setting_title_h1', 'setting_title_h1');
-    setText('description', 'description');
-    setText('docs', 'docs');
-    setText('access_token_label', 'access_token_label');
-    setText('user_name_label', 'user_name_label');
-    setText('limit_label', 'limit_label');
-    setText('exclude_types_label', 'exclude_types_label');
-    setText('interval_label', 'interval_label');
-    setText('expand_option', 'expand_option');
-    setText('button_save', 'button_save');
-
-    // 处理可选字段的展开/收起
-    const optionalFields = document.getElementById('optional-fields');
-    const toggleButton = document.getElementById('toggle-optional');
-    if (optionalFields && toggleButton) {
-        optionalFields.style.display = 'block';
-        toggleButton.textContent = API.i18n.getMessage('close_option');
-        toggleButton.addEventListener('click', function () {
-            if (optionalFields.style.display === 'none') {
-                optionalFields.style.display = 'block';
-                toggleButton.textContent = API.i18n.getMessage('close_option');
-            } else {
-                optionalFields.style.display = 'none';
-                toggleButton.textContent = API.i18n.getMessage('expand_option');
-            }
-        });
-    }
-
-    // 加载当前设置并初始化表单
-    (async () => {
-        const data = await API.storage.sync.get(['instance', 'accessToken', 'userName', 'limit', 'types', 'excludeTypes', 'interval']);
-        const setValue = (id, value) => {
-            const el = document.getElementById(id);
-            if (el) el.value = value;
-        };
-
-        setValue('accessToken', data.accessToken || '');
-        setValue('userName', data.userName || '');
-        setValue('limit', data.limit || '100');
-        setValue('interval', data.interval || '300');
-
-        // 设置排除通知类型的复选框
-        const excludeTypes = Array.isArray(data.excludeTypes) ? data.excludeTypes : [];
-        const excludeCheckboxes = document.querySelectorAll('input[name="excludeType"]');
-        excludeCheckboxes.forEach(checkbox => {
-            checkbox.checked = excludeTypes.includes(checkbox.value);
-        });
-    })();
-
-    // 表单提交处理
-    const form = document.getElementById('settings-form');
-    if (form) {
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-
-            const userName = (document.getElementById('userName') || {}).value || '';
-            let instance = '';
-            if (userName && userName.startsWith('@') && userName.includes('@', 1)) {
-                const parts = userName.split('@');
-                instance = parts[2] || '';
-            }
-
-            const accessToken = (document.getElementById('accessToken') || {}).value || '';
-            const limit = (document.getElementById('limit') || {}).value || 100;
-            const types = [];
-            const excludeTypes = Array.from(document.querySelectorAll('input[name="excludeType"]:checked'))
-                .map(checkbox => checkbox.value);
-            const interval = (document.getElementById('interval') || {}).value || 300;
-
-            (async () => {
-                await API.storage.sync.set({ instance, accessToken, userName, limit, types, excludeTypes, interval });
-                const messageElement = document.getElementById('message');
-                if (messageElement) {
-                    messageElement.textContent = API.i18n.getMessage('settings_saved');
-                    messageElement.style.display = 'block';
-                    messageElement.style.opacity = '1';
-
-                    onSettingsUpdated();
-
-                    setTimeout(() => {
-                        messageElement.style.opacity = '0';
-                        setTimeout(() => {
-                            messageElement.style.display = 'none';
-                        }, 500);
-                    }, 2000);
-                }
-            })();
-        });
-    }
-});
-
-// 定义在设置更新时调用的函数
-function onSettingsUpdated() {
-    API.runtime.sendMessage({ action: "settingsUpdated" });
+// Helper to replace i18n strings
+function localizeHtml() {
+    document.querySelectorAll('[data-i18n]').forEach(elem => {
+        const msg = chrome.i18n.getMessage(elem.getAttribute('data-i18n'));
+        if (msg) elem.textContent = msg;
+    });
 }
+
+// Saves options to chrome.storage
+const saveOptions = () => {
+    let account = document.getElementById('account').value.trim();
+    const token = document.getElementById('token').value.trim();
+    const interval = parseInt(document.getElementById('interval').value, 10) || 300;
+  
+    const filters = [];
+    document.querySelectorAll('.filter:checked').forEach((checkbox) => {
+      filters.push(checkbox.value);
+    });
+  
+    if (!account || !token) {
+        showStatus(chrome.i18n.getMessage('statusEnterAll') || 'Please enter both account and token.', 'red');
+        return;
+    }
+
+    const urlMatch = account.match(/^https?:\/\/([^\/]+)\/@([^\/]+)/);
+    if (urlMatch) {
+         account = `@${urlMatch[2]}@${urlMatch[1]}`;
+    }
+
+    let instanceDomain = '';
+    const parts = account.split('@').filter(p => p);
+    if (parts.length >= 2) {
+        instanceDomain = parts[parts.length - 1];
+    }
+
+    if (!instanceDomain || !instanceDomain.includes('.')) {
+        showStatus((chrome.i18n.getMessage('statusInvalidAcct') || 'Invalid account format'), 'red');
+        return;
+    }
+    
+    document.getElementById('account').value = account;
+  
+    chrome.storage.sync.set(
+      { account, token, interval, filters, instanceDomain },
+      () => {
+        showStatus(chrome.i18n.getMessage('statusSaved') || 'Options saved.', 'green');
+        chrome.runtime.sendMessage({ action: "updateAlarm" });
+        chrome.runtime.sendMessage({ action: "checkNotifications" });
+      }
+    );
+  };
+  
+  const restoreOptions = () => {
+    localizeHtml(); // Apply translations
+    
+    chrome.storage.sync.get(
+      { account: '', token: '', interval: 300, filters: [] },
+      (items) => {
+        document.getElementById('account').value = items.account;
+        document.getElementById('token').value = items.token;
+        document.getElementById('interval').value = items.interval;
+        
+        items.filters.forEach((filterValue) => {
+            const checkbox = document.querySelector(`.filter[value="${filterValue}"]`);
+            if (checkbox) checkbox.checked = true;
+        });
+      }
+    );
+  };
+
+  const showStatus = (msg, color = 'black') => {
+      const status = document.getElementById('status');
+      status.textContent = msg;
+      status.style.color = color;
+      setTimeout(() => {
+          status.textContent = '';
+      }, 3000);
+  };
+  
+  const testConnection = async () => {
+      let account = document.getElementById('account').value.trim();
+      const token = document.getElementById('token').value.trim();
+      
+      if (!account || !token) {
+          showStatus(chrome.i18n.getMessage('statusEnterAll'), 'red');
+          return;
+      }
+
+      const urlMatch = account.match(/^https?:\/\/([^\/]+)\/@([^\/]+)/);
+      if (urlMatch) {
+           account = `@${urlMatch[2]}@${urlMatch[1]}`;
+           document.getElementById('account').value = account;
+      }
+      
+      const parts = account.split('@').filter(p => p);
+      if (parts.length < 2) {
+          showStatus(chrome.i18n.getMessage('statusInvalidAcct'), 'red');
+          return;
+      }
+      const domain = parts[parts.length - 1];
+
+      try {
+          const response = await fetch(`https://${domain}/api/v1/notifications?limit=1`, {
+              headers: {
+                  'Authorization': `Bearer ${token}`
+              }
+          });
+          
+          if (response.ok) {
+              const contentType = response.headers.get('content-type');
+              if (contentType && contentType.includes('application/json')) {
+                   showStatus(chrome.i18n.getMessage('statusConnSuccess'), 'green');
+              } else {
+                   showStatus('Connection OK but HTML returned', 'orange');
+              }
+          } else {
+              showStatus(`${chrome.i18n.getMessage('statusConnFail')}: ${response.status}`, 'red');
+          }
+      } catch (error) {
+          showStatus(`${chrome.i18n.getMessage('statusError')}: ${error.message}`, 'red');
+      }
+  };
+
+  const updateTokenHelp = () => {
+      const accountInput = document.getElementById('account');
+      const helpDiv = document.getElementById('token-help');
+      const account = accountInput.value.trim();
+      
+      const pre = chrome.i18n.getMessage('tokenHelpPre');
+      const linkText = chrome.i18n.getMessage('tokenHelpLink');
+      const post = chrome.i18n.getMessage('tokenHelpPost');
+
+      // Attempt to extract domain
+      let domain = null;
+      
+      // Try @user@domain
+      const parts = account.split('@').filter(p => p);
+      if (parts.length >= 2) {
+          domain = parts[parts.length - 1];
+      } else {
+          // Try URL match logic similar to save/test options
+          // But strict regex for robust extract during typing might be annoying if bouncing.
+          // Just simple scan:
+          const urlMatch = account.match(/^https?:\/\/([^\/]+)/);
+          if (urlMatch) domain = urlMatch[1];
+      }
+
+      if (domain && domain.includes('.')) {
+          // Valid looking domain
+          const url = `https://${domain}/settings/applications`;
+          helpDiv.innerHTML = `${pre}<a href="${url}" target="_blank">${linkText}</a>${post}`;
+      } else {
+          // Fallback static text
+          helpDiv.innerHTML = `${pre}${linkText}${post}`;
+      }
+  };
+
+  document.getElementById('account').addEventListener('input', updateTokenHelp);
+
+  document.addEventListener('DOMContentLoaded', () => {
+      restoreOptions();
+      // Trigger help update once after restore (wrapped in timeout to ensure value is populated)
+      setTimeout(updateTokenHelp, 100); 
+  });
+  document.getElementById('save').addEventListener('click', saveOptions);
+  document.getElementById('test').addEventListener('click', testConnection);

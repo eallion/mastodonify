@@ -1,126 +1,39 @@
 {
-  "extDesc": {
-    "message": "Display unread notifications count from Mastodon.",
-    "description": "Mastodonify description"
-  },
-  "setting_title": {
-    "message": "Mastodonify Setting",
-    "description": "Mastodonify Setting"
-  },
-  "setting_title_h1": {
-    "message": "Setting",
-    "description": "Mastodonify Setting"
-  },
-  "docs": {
-    "message": "Docs - [<a href='https://github.com/eallion/mastodonify?tab=readme-ov-file#mastodonify' target='_blank' rel='noopener noreferrer'>Tutorial</a>]",
-    "description": "Mastodonify Docs"
-  },
-  "description": {
-    "message": "Description: Support Mastodon version ≥ <a href='https://github.com/mastodon/mastodon/releases/tag/v4.3.0' target='_blank' rel='noopener noreferrer'>v4.3.0</a>",
-    "description": "Mastodonify Description"
-  },
-  "access_token_label": {
-    "message": "[Required] Token",
-    "description": "Application Access Token"
-  },
-  "user_name_label": {
-    "message": "[Required] Mastodon User Name",
-    "description": "User Name"
-  },
-    "limit_label": {
-    "message": "[Optional] Limit (1-1000)",
-    "description": "Limit"
-  },
-    "exclude_types_label": {
-    "message": "[Optional] Exclude Types",
-    "description": "Exclude Types"
-  },
-  "interval_label": {
-    "message": "[Optional] Request Interval (seconds)",
-    "description": "Request Interval"
-  },
-  "expand_option": {
-    "message": "Expand option",
-    "description": "Expand option"
-  },
-  "close_option": {
-    "message": "Close option",
-    "description": "Close option"
-  },
-  "button_save": {
-    "message": "Save",
-    "description": "Save Button"
-  },
-  "basic_info_title": {
-    "message": "Basic Information",
-    "description": "Basic Information Section Title"
-  },
-  "advanced_settings_title": {
-    "message": "Advanced Settings",
-    "description": "Advanced Settings Section Title"
-  },
-  "username_hint": {
-    "message": "e.g. @user@mastodon.social",
-    "description": "Username input hint"
-  },
-  "token_hint": {
-    "message": "Visit your instance's ",
-    "description": "Token input hint part 1"
-  },
-  "app_settings_page": {
-    "message": "application settings page",
-    "description": "Application settings page text"
-  },
-  "token_hint_suffix": {
-    "message": " to create an access token",
-    "description": "Token input hint part 2"
-  },
-  "settings_button": {
-    "message": "Setting",
-    "description": "Settings button text"
-  },
-  "unread_notifications_text": {
-    "message": "Notifications",
-    "description": "Unread notifications text"
-  },
-  "no_new_notifications": {
-    "message": "Notifications",
-    "description": "No new notifications text"
-  },
-  "configuration_error": {
-    "message": "Configuration error",
-    "description": "Configuration error text"
-  },
-  "settings_saved": {
-    "message": "Settings saved!",
-    "description": "Settings saved!"
-  },
-  "open_mastodon_label": {
-    "message": "Open Mastodon",
-    "description": "Open Mastodon Button"
-  },
-  "test_notifications_label": {
-    "message": "Test Notifications",
-    "description": "Test Notifications Button"
-  },
-  "loading": {
-    "message": "Loading...",
-    "description": "Loading state text"
-  },
-  "network_error": {
-    "message": "Network error",
-    "description": "Network error message"
-  },
-  "rate_limit_exceeded": {
-    "message": "Rate limit exceeded, please try again later",
-    "description": "API rate limit message"
-  },
-  "invalid_token": {
-    "message": "Invalid access token, please check settings",
-    "description": "Invalid token message"
-  },
-  "invalid_instance": {
-    "message": "Invalid instance address, please check username format",
-    "description": "Invalid instance message"
-  }
+  "extName": { "message": "Mastodonify" },
+  "extDesc": { "message": "Show unread Mastodon notifications on the icon." },
+  "settingsTitle": { "message": "Mastodonify Settings" },
+  "accountLabel": { "message": "Account" },
+  "examplePrefix": { "message": "e.g. " },
+  "tokenLabel": { "message": "Access Token" },
+  "intervalLabel": { "message": "Check Interval (seconds)" },
+  "ignoreLabel": { "message": "Notification Types to IGNORE:" },
+  "filter_mention": { "message": "Mention" },
+  "filter_status": { "message": "Status" },
+  "filter_reblog": { "message": "Reblog" },
+  "filter_follow": { "message": "Follow" },
+  "filter_follow_request": { "message": "Follow Request" },
+  "filter_favourite": { "message": "Favourite" },
+  "filter_poll": { "message": "Poll" },
+  "filter_update": { "message": "Update" },
+  "filter_admin_sign_up": { "message": "Admin Sign Up" },
+  "filter_admin_report": { "message": "Admin Report" },
+  "helpLink": { "message": "Need help? Visit the Project README." },
+  "saveBtn": { "message": "Save Settings" },
+  "testBtn": { "message": "Test Connection" },
+  "setupMsg": { "message": "Please configure Mastodonify" },
+  "openSettingsBtn": { "message": "Open Settings" },
+  "checking": { "message": "Checking..." },
+  "noUnread": { "message": "No unread notifications" },
+  "suffixNotif": { "message": "Notifications" },
+  "statusSaved": { "message": "Options saved." },
+  "statusEnterAll": { "message": "Please enter both account and token." },
+  "statusInvalidAcct": { "message": "Invalid account format." },
+  "statusConnSuccess": { "message": "Connection successful!" },
+  "statusConnFail": { "message": "Connection failed" },
+  "statusError": { "message": "Error" },
+  "filter_severed_relationships": { "message": "Severed Relationships" },
+  "filter_moderation_warning": { "message": "Moderation Warning" },
+  "tokenHelpPre": { "message": "Please visit your instance's " },
+  "tokenHelpLink": { "message": "Application Settings page" },
+  "tokenHelpPost": { "message": " to create an access token.<br>Only <code>read:notifications</code> permission is required." }
 }
